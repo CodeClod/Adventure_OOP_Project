@@ -35,8 +35,17 @@ public class Room {
   String getRoomDescription() {
     return roomDescription;
   }
-
-  void room() {
-
+  Room getRoomNorth() {
+    return north;
   }
+  Room getRoomEast() {
+    return east;
+  }
+  Room getRoomSouth() {
+    return south;
+  }
+  Room getRoomWest() {
+    return west;
+  }
+
 }
