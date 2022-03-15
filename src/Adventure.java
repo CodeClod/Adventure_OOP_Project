@@ -1,3 +1,4 @@
+import java.util.Locale;
 import java.util.Scanner;
 
 public class Adventure {
@@ -16,6 +17,7 @@ public class Adventure {
       room1.setName("Forest Clearing");
     }
 */
+
   void runProgram() {
     // attributter
     boolean game = true;
@@ -29,14 +31,27 @@ public class Adventure {
     Room room2 = new Room();
     room2.setName("Short roadway");
     room2.setRoomDescription("a short roadway between two forests");
-    Room room3 = new Room("Little Abandoned Town", "a derelict town of little use to anyone. All you can see is rubble and what someone once called home.");
-
-    Room room4 = new Room("Forest river", "a surprisingly bright river. You can see fish swimming in the clear water");
-    Room room5 = new Room("PLACEHOLDER", "PLACEHOLDER");
-    Room room6 = new Room("PLACEHOLDER", "PLACEHOLDER");
-    Room room7 = new Room("PLACEHOLDER", "PLACEHOLDER");
-    Room room8 = new Room("PLACEHOLDER", "PLACEHOLDER");
-    Room room9 = new Room("PLACEHOLDER", "PLACEHOLDER");
+    Room room3 = new Room();
+    room3.setName("Little Abandoned Town");
+    room3.setRoomDescription("a derelict town of little use to anyone. All you can see is rubble and what someone once called home");
+    Room room4 = new Room();
+    room4.setName("Forest river");
+    room4.setRoomDescription("a surprisingly bright river. You can see fish swimming in the clear water");
+    Room room5 = new Room();
+    room5.setName("Hermit's cave");
+    room5.setRoomDescription("a small cave filled mushrooms, and filled with various trinkets made of animal bones. A hermit greets you");
+    Room room6 = new Room();
+    room6.setName("Haunted forest");
+    room6.setRoomDescription("this part of the forests is dark, moist and filled with all sorts of thorny plant. You hear strange noises all around you.");
+    Room room7 = new Room();
+    room7.setName("Ruined Hilltop Castle");
+    room7.setRoomDescription("a ruined castle overlooking the river below. It doesn't seem to have been inhabited for a long time");
+    Room room8 = new Room();
+    room8.setName("Damp swamp");
+    room8.setRoomDescription("a mysterious swamp. There's a slim, old walkway through the bog.");
+    Room room9 = new Room();
+    room9.setName("Cabin in the Woods");
+    room9.setRoomDescription("a strange little cabin inhabited by three wyrd sisters");
 
     // Sets starting room
     Room currentRoom = room1;
@@ -64,7 +79,6 @@ public class Adventure {
       System.out.println("What will you do?: ");
       userInput = in.nextLine();
 
-
       switch (userInput) {
         case "go north", "n" -> {
           if (currentRoom.getRoomNorth() != null) {
@@ -85,7 +99,7 @@ public class Adventure {
         case "go south", "s" -> {
           if (currentRoom.getRoomSouth() != null) {
             currentRoom = currentRoom.getRoomSouth();
-            System.out.printf("You went south, reaching a %s. You see %s ", currentRoom.getName(), currentRoom.getRoomDescription());
+            System.out.printf("You went south, reaching a %s. You see %s ", currentRoom.getName().toLowerCase(Locale.ROOT), currentRoom.getRoomDescription());
           }
           else
             System.out.println("You can't go that way.");
