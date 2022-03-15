@@ -2,7 +2,7 @@ import java.util.Scanner;
 
 public class Adventure {
   Scanner in = new Scanner(System.in);
-
+  //Room room1,room2,room3,room4,room5,room6,room7,room8,room9;
   void listOfCommands() {
     System.out.println("List of commands: ");
     System.out.println("\t\"help\" Prints list of commands.");
@@ -11,13 +11,20 @@ public class Adventure {
     System.out.println("\t\"go north/south/east/west\" OR n/s/e/w, to move in a direction.");
   }
 
-
+  /*
+  void roomsNameSet() {
+      room1.setName("Forest Clearing");
+    }
+*/
   void runProgram() {
+    // attributter
     boolean game = true;
     String userInput;
+    //
 
     //Room 1-9 Instancing
     Room room1 = new Room("Forest clearing","a quiet, serene clearing. The mossy undergrowth looks like soft green wool");
+    room1.setName("Forest clearing");
     Room room2 = new Room("Short roadway", "a short roadway between two forests");
     Room room3 = new Room("Little Abandoned Town", "a derelict town of little use to anyone. All you can see is rubble and what someone once called home.");
     Room room4 = new Room("Forest river", "a surprisingly bright river. You can see fish swimming in the clear water");
@@ -92,7 +99,7 @@ public class Adventure {
           System.out.println("Thanks for playing. Goodbye!");
           game = false;
         }
-        case "look"-> System.out.println("You're in a " + currentRoom.getName() + ". " + currentRoom.getRoomDescription());
+        case "look"-> System.out.println("You're in a " + currentRoom.getName() + ". Looking around, you see " + currentRoom.getRoomDescription());
         default -> System.out.println("Invalid command. Type \"help\" for a list of commands.");
         }
       System.out.println();
@@ -105,18 +112,5 @@ public class Adventure {
     new Adventure().runProgram();
 
   }
-
-  void uiAdventure() {
-    menuAdventure();
-  }
-
-
-
-  void menuAdventure() {
-    //Switch
-  }
-
-
-
 
 }
