@@ -29,7 +29,7 @@ public class Adventure {
     Room room1 = new Room();
     room1.setName("Forest clearing");
     room1.setRoomDescription("a quiet, serene clearing. The mossy undergrowth looks like soft green wool");
-    room1.setRoomDescriptionShort();
+    room1.setRoomDescriptionShort("");
     Room room2 = new Room();
     room2.setName("Short roadway");
     room2.setRoomDescription("a short roadway between two forests");
@@ -77,6 +77,9 @@ public class Adventure {
     System.out.println("You find yourself seemingly lost walking through a forest.\nYou're not sure how it happened, but you got no choice but to keep moving.");
     System.out.println("(Move around with \"go \" plus \"north/south/east/west\" OR simply n/s/e/w)");
     System.out.println("Now...");
+
+    Room xyzzy = room1;
+    Room teleportroom;
     // Program loop
     do {
       System.out.println("What will you do?: ");
@@ -126,6 +129,12 @@ public class Adventure {
           game = false;
         }
         case "look"-> System.out.println("You're in a " + currentRoom.getName() + ". Looking around, you see " + currentRoom.getRoomDescription());
+        case "xyzzy" -> {
+          teleportroom = currentRoom;
+          currentRoom = xyzzy;
+          System.out.println("You teleported to " + currentRoom.getName());
+          xyzzy = teleportroom;
+        }
         default -> System.out.println("Invalid command. Type \"help\" for a list of commands.");
         }
       System.out.println();
