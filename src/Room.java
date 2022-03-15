@@ -10,6 +10,7 @@ public class Room {
   private Room south;
   private Room west;
   private boolean visited = false;
+  private boolean light =  false;
 
   Room() {
   }
@@ -17,7 +18,9 @@ public class Room {
   boolean checkIfVisited() {
     return visited;
   }
-
+  boolean checkIfLightsOn() {
+    return light;
+  }
   // Setters
   void setRooms(Room north,Room east, Room south, Room west) {
     this.north = north;
@@ -27,6 +30,9 @@ public class Room {
   }
   void setVisitedTrue() {
     visited = true;
+  }
+  void setLightsOn() {
+    light = true;
   }
   void setName(String name) {
     this.name = name;
