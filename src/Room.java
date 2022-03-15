@@ -9,9 +9,7 @@ public class Room {
   private Room south;
   private Room west;
 
-  Room(String name, String roomDescription) {
-    setName(name);
-    setRoomDescription(roomDescription);
+  Room() {
   }
 
   // Setters

@@ -23,10 +23,14 @@ public class Adventure {
     //
 
     //Room 1-9 Instancing
-    Room room1 = new Room("Forest clearing","a quiet, serene clearing. The mossy undergrowth looks like soft green wool");
+    Room room1 = new Room();
     room1.setName("Forest clearing");
-    Room room2 = new Room("Short roadway", "a short roadway between two forests");
+    room1.setRoomDescription("a quiet, serene clearing. The mossy undergrowth looks like soft green wool");
+    Room room2 = new Room();
+    room2.setName("Short roadway");
+    room2.setRoomDescription("a short roadway between two forests");
     Room room3 = new Room("Little Abandoned Town", "a derelict town of little use to anyone. All you can see is rubble and what someone once called home.");
+
     Room room4 = new Room("Forest river", "a surprisingly bright river. You can see fish swimming in the clear water");
     Room room5 = new Room("PLACEHOLDER", "PLACEHOLDER");
     Room room6 = new Room("PLACEHOLDER", "PLACEHOLDER");
