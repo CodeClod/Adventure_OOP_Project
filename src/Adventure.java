@@ -24,10 +24,12 @@ public class Adventure {
     String userInput;
     //
 
+    // TODO Make short descriptions
     //Room 1-9 Instancing
     Room room1 = new Room();
     room1.setName("Forest clearing");
     room1.setRoomDescription("a quiet, serene clearing. The mossy undergrowth looks like soft green wool");
+    room1.setRoomDescriptionShort();
     Room room2 = new Room();
     room2.setName("Short roadway");
     room2.setRoomDescription("a short roadway between two forests");
@@ -55,6 +57,7 @@ public class Adventure {
 
     // Sets starting room
     Room currentRoom = room1;
+    room1.setVisitedTrue();
 
     // Setters for room refferences / connectivity
     room1.setRooms(null, room2, room4, null);
@@ -83,7 +86,12 @@ public class Adventure {
         case "go north", "n" -> {
           if (currentRoom.getRoomNorth() != null) {
             currentRoom = currentRoom.getRoomNorth();
-            System.out.printf("You went north, reaching a %s. You see %s ", currentRoom.getName(), currentRoom.getRoomDescription());
+            if (currentRoom.checkIfVisited() == false) {
+              currentRoom.setVisitedTrue();
+              System.out.printf("You went north, reaching a %s. You see %s ", currentRoom.getName(), currentRoom.getRoomDescription());
+            }
+            else
+              System.out.printf("You went north, reaching a %s. You see %s ", currentRoom.getName(), currentRoom.getRoomDescriptionShort());
           }
           else
             System.out.println("You can't go that way.");
