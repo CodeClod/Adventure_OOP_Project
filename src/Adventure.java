@@ -179,7 +179,7 @@ public class Adventure {
     // Darkness! - room 6 - haunted forest
     boolean darkness;
     // Torch off
-    if (currentRoom == room6 && room6.checkIfLightsOn() && room6.checkIfTorchLit()) {
+    if (currentRoom == room6 && room6.checkIfLightsOn() ) {
       System.out.println("You feel the light shining through the branches, do you really need a torch in hand?");
       do {
         darkness = false;
@@ -188,7 +188,6 @@ public class Adventure {
         switch (in.nextLine()) {
           case "t" -> {
             darkness = true;
-            room6.setPutOutTorch();
             room6.setLightsOff();
             currentRoom = lastRoom;
             lastRoom = room6;
@@ -205,7 +204,7 @@ public class Adventure {
     }
 
     // Torch on
-    if (currentRoom == room6 && !room6.checkIfLightsOn() && !room6.checkIfTorchLit()) {
+    if (currentRoom == room6 && !room6.checkIfLightsOn() ) {
       System.out.println("Suddenly you feel like the darkness is closing in on you!");
       do {
         darkness = true;
@@ -214,7 +213,6 @@ public class Adventure {
         switch (in.nextLine()) {
           case "t" -> {
             darkness = false;
-            room6.setLitTorch();
             room6.setLightsOn();
             System.out.println("You light your torch and the darkness dissipates.");
           }

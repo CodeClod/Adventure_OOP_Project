@@ -11,7 +11,6 @@ public class Room {
   private Room west;
   private boolean visited = false;
   private boolean light =  false;
-  private boolean torch = false;
 
   Room() {
   }
@@ -22,9 +21,7 @@ public class Room {
   boolean checkIfLightsOn() {
     return light;
   }
-  boolean checkIfTorchLit() {
-    return torch;
-  }
+
   // Setters
   void setRooms(Room north,Room east, Room south, Room west) {
     this.north = north;
@@ -41,13 +38,6 @@ public class Room {
 
   void setLightsOff() {
     light = false;
-  }
-
-  void setLitTorch() {
-    torch = true;
-  }
-  void setPutOutTorch() {
-    torch = false;
   }
 
   void setName(String name) {
