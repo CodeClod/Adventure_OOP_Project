@@ -178,8 +178,9 @@ public class Adventure {
   private Room darkness(Room currentRoom, Room room6, Room lastRoom) {
     // Darkness! - room 6 - haunted forest
     boolean darkness;
+    Room tempRoom = currentRoom;
     // Torch off
-    if (currentRoom == room6 && room6.checkIfLightsOn() ) {
+    if (currentRoom == room6 && currentRoom.checkIfLightsOn() ) {
       System.out.println("You feel the light shining through the branches, do you really need a torch in hand?");
       do {
         darkness = false;
@@ -188,9 +189,9 @@ public class Adventure {
         switch (in.nextLine()) {
           case "t" -> {
             darkness = true;
-            room6.setLightsOff();
+            currentRoom.setLightsOff();
             currentRoom = lastRoom;
-            lastRoom = room6;
+            lastRoom = tempRoom;
             System.out.println("As soon as you put your torch out the darkness returns!");
             System.out.printf("You return whence you came, reaching a %s. You see %s\n", currentRoom.getName(), currentRoom.getRoomDescriptionShort());
           }
@@ -204,7 +205,7 @@ public class Adventure {
     }
 
     // Torch on
-    if (currentRoom == room6 && !room6.checkIfLightsOn() ) {
+    if (currentRoom == room6 && !currentRoom.checkIfLightsOn() ) {
       System.out.println("Suddenly you feel like the darkness is closing in on you!");
       do {
         darkness = true;
@@ -213,13 +214,13 @@ public class Adventure {
         switch (in.nextLine()) {
           case "t" -> {
             darkness = false;
-            room6.setLightsOn();
+            currentRoom.setLightsOn();
             System.out.println("You light your torch and the darkness dissipates.");
           }
           case "r" -> {
             darkness = false;
             currentRoom = lastRoom;
-            lastRoom = room6;
+            lastRoom = tempRoom;
             System.out.printf("You return whence you came, reaching a %s. You see %s\n", currentRoom.getName(), currentRoom.getRoomDescriptionShort());
           }
           default -> System.out.println("The darkness engulfs you! You have to make a choice!");
@@ -227,6 +228,7 @@ public class Adventure {
       } while (darkness);
     }
 
+    //alternative descriptions
     if (room6.checkIfLightsOn()) {
       room6.setRoomDescription("a light forest, filled with all sorts of thorny plant.");
       room6.setRoomDescriptionShort("a light forest, filled with all sorts of thorny plant.");
