@@ -22,8 +22,6 @@ public class Adventure {
   void runProgram() {
     // attributter
     boolean game = true;
-    boolean darkness;
-    boolean torch = false;
     String userInput;
     //
 
@@ -100,63 +98,10 @@ public class Adventure {
     Room xyzzy = room1;
     Room teleportroom;
     Room lastRoom = null;
+
     // Program loop
     do {
-      // Darkness! - room 6 - haunted forest
-      if (currentRoom == room6 && room6.checkIfLightsOn() && torch) {
-        System.out.println("You feel the light shining through the branches, do you really need a torch in hand?");
-        do {
-          darkness =false;
-          System.out.println("Put your torch away (t) or continue with it lit (c)"); // "Put your torch away" used instead of "turn light off".
-          System.out.println("What will you do?: ");
-          switch (in.nextLine()) {
-            case "t" -> {
-              darkness = true;
-              torch = false;
-              room6.setLightsOff();
-              currentRoom = lastRoom;
-              lastRoom = room6;
-              System.out.println("As soon as you put your torch out the darkness returns!");
-              System.out.printf("You return whence you came, reaching a %s. You see %s\n", currentRoom.getName(), currentRoom.getRoomDescriptionShort());
-            }
-            case "c" -> {
-              darkness = true;
-              System.out.println("You continue onward with a torch in your hand.");
-            }
-            default -> System.out.println("You pause for a second as a ray of sunlight gently hits your face. What is your choice.");
-          }
-
-        } while (!darkness);
-        }
-
-      if (currentRoom == room6 && !room6.checkIfLightsOn() && !torch) {
-        System.out.println("Suddenly you feel like the darkness is closing in on you!");
-        do {
-          darkness = true;
-          System.out.println("Light a torch (t) or return whence you came (r)"); // "Light a torch" used instead of "turn light on".
-          System.out.println("What will you do?: ");
-          switch (in.nextLine()) {
-            case "t" -> {
-              darkness = false;
-              torch = true;
-              room6.setLightsOn();
-              System.out.println("You light your torch and the darkness dissipates.");
-            }
-            case "r" -> {
-              darkness = false;
-              currentRoom = lastRoom;
-              lastRoom = room6;
-              System.out.printf("You return whence you came, reaching a %s. You see %s\n", currentRoom.getName(), currentRoom.getRoomDescriptionShort());
-            }
-            default -> System.out.println("The darkness engulfs you! You have to make a choice!");
-          }
-        } while (darkness);
-      }
-
-      if (room6.checkIfLightsOn()) {
-        room6.setRoomDescription("a light forest, filled with all sorts of thorny plant.");
-        room6.setRoomDescriptionShort("a light forest, filled with all sorts of thorny plant.");
-      }
+      currentRoom = darkness(currentRoom, room6, lastRoom);
 
       System.out.println("What will you do?: ");
       userInput = in.nextLine();
@@ -228,6 +173,67 @@ public class Adventure {
 
     } while (game == true);
 
+  }
+
+  private Room darkness(Room currentRoom, Room room6, Room lastRoom) {
+    // Darkness! - room 6 - haunted forest
+    boolean darkness;
+    // Torch off
+    if (currentRoom == room6 && room6.checkIfLightsOn() && room6.checkIfTorchLit()) {
+      System.out.println("You feel the light shining through the branches, do you really need a torch in hand?");
+      do {
+        darkness = false;
+        System.out.println("Put your torch away (t) or continue with it lit (c)"); // "Put your torch away" used instead of "turn light off".
+        System.out.println("What will you do?: ");
+        switch (in.nextLine()) {
+          case "t" -> {
+            darkness = true;
+            room6.setPutOutTorch();
+            room6.setLightsOff();
+            currentRoom = lastRoom;
+            lastRoom = room6;
+            System.out.println("As soon as you put your torch out the darkness returns!");
+            System.out.printf("You return whence you came, reaching a %s. You see %s\n", currentRoom.getName(), currentRoom.getRoomDescriptionShort());
+          }
+          case "c" -> {
+            darkness = true;
+            System.out.println("You continue onward with a torch in your hand.");
+          }
+          default -> System.out.println("You pause for a second as a ray of sunlight gently hits your face. What is your choice.");
+        }
+      } while (!darkness);
+    }
+
+    // Torch on
+    if (currentRoom == room6 && !room6.checkIfLightsOn() && !room6.checkIfTorchLit()) {
+      System.out.println("Suddenly you feel like the darkness is closing in on you!");
+      do {
+        darkness = true;
+        System.out.println("Light a torch (t) or return whence you came (r)"); // "Light a torch" used instead of "turn light on".
+        System.out.println("What will you do?: ");
+        switch (in.nextLine()) {
+          case "t" -> {
+            darkness = false;
+            room6.setLitTorch();
+            room6.setLightsOn();
+            System.out.println("You light your torch and the darkness dissipates.");
+          }
+          case "r" -> {
+            darkness = false;
+            currentRoom = lastRoom;
+            lastRoom = room6;
+            System.out.printf("You return whence you came, reaching a %s. You see %s\n", currentRoom.getName(), currentRoom.getRoomDescriptionShort());
+          }
+          default -> System.out.println("The darkness engulfs you! You have to make a choice!");
+        }
+      } while (darkness);
+    }
+
+    if (room6.checkIfLightsOn()) {
+      room6.setRoomDescription("a light forest, filled with all sorts of thorny plant.");
+      room6.setRoomDescriptionShort("a light forest, filled with all sorts of thorny plant.");
+    }
+    return currentRoom;
   }
 
   public static void main(String[] args) {
