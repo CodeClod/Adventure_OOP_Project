@@ -1,7 +1,5 @@
 public class Room {
 
-  Room room;
-
   private String name;
   private String roomDescription;
   private String roomDescriptionShort;
