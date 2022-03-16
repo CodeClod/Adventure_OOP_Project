@@ -35,11 +35,9 @@ public class Room {
   void setLightsOn() {
     light = true;
   }
-
   void setLightsOff() {
     light = false;
   }
-
   void setName(String name) {
     this.name = name;
   }
