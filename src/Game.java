@@ -4,9 +4,42 @@ public class Game {
     Scanner in = new Scanner(System.in);
     UserInterface ui = new UserInterface();
     Map map = new Map();
+    StringBuilder roomCheck = new StringBuilder();
 
     void tellsIfVisited(Room room) {
-
+        // Checks if you've gone that way before and tells you
+        if (room.getRoomEast() != null) {
+            if (room.getRoomEast().checkIfVisited()) {
+                if (roomCheck.isEmpty())
+                    roomCheck.append("There are ways: ");
+                roomCheck.append(" -East- ");
+            }
+        }
+        else if (room.getRoomNorth() != null) {
+            if (room.getRoomNorth().checkIfVisited()) {
+                if (roomCheck.isEmpty())
+                    roomCheck.append("You can go: ");
+                roomCheck.append(" -North- ");
+            }
+        }
+        else if (room.getRoomWest() != null) {
+            if (room.getRoomWest().checkIfVisited()) {
+                if (roomCheck.isEmpty())
+                    roomCheck.append("You can go: ");
+                roomCheck.append(" -West- ");
+            }
+        }
+        if (room.getRoomSouth() != null) {
+            if (room.getRoomSouth().checkIfVisited()) {
+                if (roomCheck.isEmpty()) {
+                    roomCheck.append("You can go: ");
+                }
+                roomCheck.append(" -South- ");
+            }
+        }
+        if (!(roomCheck.isEmpty()))
+            System.out.println(roomCheck);
+        roomCheck.delete(0,roomCheck.length());
     }
 
     void runProgram() {
@@ -15,7 +48,7 @@ public class Game {
         boolean darkness;
         boolean torch = false;
         String userInput;
-        StringBuilder roomCheck = new StringBuilder();
+
 
         map.createRooms();
 
@@ -147,39 +180,7 @@ public class Game {
                 }
                 case "look" -> {
                     ui.lookAround(currentRoom);
-                    // Checks if you've gone that way before and tells you
-                    if (currentRoom.getRoomEast() != null) {
-                        if (currentRoom.getRoomEast().checkIfVisited()) {
-                            if (roomCheck.isEmpty())
-                                roomCheck.append("There are ways:");
-                            roomCheck.append(" -East- ");
-                        }
-                    }
-                    else if (currentRoom.getRoomNorth() != null) {
-                        if (currentRoom.getRoomNorth().checkIfVisited()) {
-                            if (roomCheck.isEmpty())
-                                roomCheck.append("You can go:");
-                            roomCheck.append(" -North- ");
-                        }
-                    }
-                    else if (currentRoom.getRoomWest() != null) {
-                        if (currentRoom.getRoomWest().checkIfVisited()) {
-                            if (roomCheck.isEmpty())
-                                roomCheck.append("You can go:");
-                            roomCheck.append(" -West- ");
-                        }
-                    }
-                    if (currentRoom.getRoomSouth() != null) {
-                        if (currentRoom.getRoomSouth().checkIfVisited()) {
-                            if (roomCheck.isEmpty()) {
-                                roomCheck.append("You can go:");
-                            }
-                            roomCheck.append(" -South- ");
-                        }
-                    }
-                    if (!(roomCheck.isEmpty()))
-                        System.out.println(roomCheck);
-                    roomCheck.delete(0,roomCheck.length());
+                    tellsIfVisited(currentRoom);
                 }
                 case "xyzzy" -> {
                     teleportRoom = currentRoom;
