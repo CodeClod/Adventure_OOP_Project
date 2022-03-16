@@ -52,8 +52,15 @@ public class UserInterface {
         System.out.println("You're in a " + room.getName() + ". Looking around, you see " + room.getRoomDescription());
     }
 
+    void askForPrompt() {
+        System.out.println("What will you do?: ");
+    }
 
     void invalidDirection() {
         System.out.println("Can't go that way.");
+    }
+
+    void invalidCommand() {
+        System.out.println("Invalid command. Type \"help\" for a list of commands.");
     }
 }

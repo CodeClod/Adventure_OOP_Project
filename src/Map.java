@@ -43,7 +43,6 @@ public class Map {
         room8.setName("Damp swamp");
         room8.setRoomDescription("a mysterious swamp. There's a slim, old walkway through the bog.");
         room8.setRoomDescriptionShort("a mysterious swamp.");
-
         room9 = new Room();
         room9.setName("Cabin in the Woods");
         room9.setRoomDescription("a strange little cabin. The cabin is inhabited by three sisters, possibly witches");

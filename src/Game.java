@@ -5,12 +5,17 @@ public class Game {
     UserInterface ui = new UserInterface();
     Map map = new Map();
 
+    void tellsIfVisited(Room room) {
+
+    }
+
     void runProgram() {
         // attributter
         boolean game = true;
         boolean darkness;
         boolean torch = false;
         String userInput;
+        StringBuilder roomCheck = new StringBuilder();
 
         map.createRooms();
 
@@ -81,7 +86,9 @@ public class Game {
                 map.getRoom6().setRoomDescription("a light forest, filled with all sorts of thorny plant.");
                 map.getRoom6().setRoomDescriptionShort("a light forest, filled with all sorts of thorny plant.");
             }
-            System.out.println("What will you do?: ");
+
+            ui.askForPrompt();
+
             userInput = in.nextLine();
 
             switch (userInput) {
@@ -138,14 +145,49 @@ public class Game {
                     System.out.println("Thanks for playing. Goodbye!");
                     game = false;
                 }
-                case "look" -> ui.lookAround(currentRoom);
+                case "look" -> {
+                    ui.lookAround(currentRoom);
+                    // Checks if you've gone that way before and tells you
+                    if (currentRoom.getRoomEast() != null) {
+                        if (currentRoom.getRoomEast().checkIfVisited()) {
+                            if (roomCheck.isEmpty())
+                                roomCheck.append("There are ways:");
+                            roomCheck.append(" -East- ");
+                        }
+                    }
+                    else if (currentRoom.getRoomNorth() != null) {
+                        if (currentRoom.getRoomNorth().checkIfVisited()) {
+                            if (roomCheck.isEmpty())
+                                roomCheck.append("You can go:");
+                            roomCheck.append(" -North- ");
+                        }
+                    }
+                    else if (currentRoom.getRoomWest() != null) {
+                        if (currentRoom.getRoomWest().checkIfVisited()) {
+                            if (roomCheck.isEmpty())
+                                roomCheck.append("You can go:");
+                            roomCheck.append(" -West- ");
+                        }
+                    }
+                    if (currentRoom.getRoomSouth() != null) {
+                        if (currentRoom.getRoomSouth().checkIfVisited()) {
+                            if (roomCheck.isEmpty()) {
+                                roomCheck.append("You can go:");
+                            }
+                            roomCheck.append(" -South- ");
+                        }
+                    }
+                    if (!(roomCheck.isEmpty()))
+                        System.out.println(roomCheck);
+                    roomCheck.delete(0,roomCheck.length());
+                }
                 case "xyzzy" -> {
                     teleportRoom = currentRoom;
                     currentRoom = xyzzy;
                     System.out.println("You teleported to " + currentRoom.getName());
                     xyzzy = teleportRoom;
                 }
-                default -> System.out.println("Invalid command. Type \"help\" for a list of commands.");
+                default -> ui.invalidCommand();
             }
             System.out.println();
 
