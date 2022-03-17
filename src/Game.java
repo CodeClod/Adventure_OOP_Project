@@ -5,6 +5,7 @@ public class Game {
     UserInterface ui = new UserInterface();
     Map map = new Map();
     StringBuilder roomCheck = new StringBuilder();
+    LockedDoors ld = new LockedDoors();
 
     void tellsIfVisited(Room room) {
         // Checks if you've gone that way before and tells you
@@ -45,8 +46,6 @@ public class Game {
     void runProgram() {
         // attributter
         boolean game = true;
-        boolean darkness;
-        boolean torch = false;
         String userInput;
 
 
@@ -66,59 +65,7 @@ public class Game {
 
         // Program loop
         do {
-            // Darkness! - room 6 - haunted forest
-            if (currentRoom == map.getRoom6() && map.getRoom6().checkIfLightsOn() && torch) {
-                System.out.println("You feel the light shining through the branches, do you really need a torch in hand?");
-                do {
-                    darkness =false;
-                    System.out.println("Put your torch away (t) or continue with it lit (c)"); // "Put your torch away" used instead of "turn light off".
-                    System.out.println("What will you do?: ");
-                    switch (in.nextLine()) {
-                        case "t" -> {
-                            darkness = true;
-                            torch = false;
-                            map.getRoom6().setLightsOff();
-                            currentRoom = lastRoom;
-                            lastRoom = map.getRoom6();
-                            System.out.println("As soon as you put your torch out the darkness returns!");
-                            System.out.printf("You return whence you came, reaching a %s. You see %s\n", currentRoom.getName(), currentRoom.getRoomDescriptionShort());
-                        }
-                        case "c" -> {
-                            darkness = true;
-                            System.out.println("You continue onward with a torch in your hand.");
-                        }
-                        default -> System.out.println("You pause for a second as a ray of sunlight gently hits your face. What is your choice.");
-                    }
-
-                } while (!darkness);
-            }
-            if (currentRoom == map.getRoom6() && !map.getRoom6().checkIfLightsOn() && !torch) {
-                System.out.println("Suddenly you feel like the darkness is closing in on you!");
-                do {
-                    darkness = true;
-                    System.out.println("Light a torch (t) or return whence you came (r)"); // "Light a torch" used instead of "turn light on".
-                    System.out.println("What will you do?: ");
-                    switch (in.nextLine()) {
-                        case "t" -> {
-                            darkness = false;
-                            torch = true;
-                            map.getRoom6().setLightsOn();
-                            System.out.println("You light your torch and the darkness dissipates.");
-                        }
-                        case "r" -> {
-                            darkness = false;
-                            currentRoom = lastRoom;
-                            lastRoom = map.getRoom6();
-                            System.out.printf("You return whence you came, reaching a %s. You see %s\n", currentRoom.getName(), currentRoom.getRoomDescriptionShort());
-                        }
-                        default -> System.out.println("The darkness engulfs you! You have to make a choice!");
-                    }
-                } while (darkness);
-            }
-            if (map.getRoom6().checkIfLightsOn()) {
-                map.getRoom6().setRoomDescription("a light forest, filled with all sorts of thorny plant.");
-                map.getRoom6().setRoomDescriptionShort("a light forest, filled with all sorts of thorny plant.");
-            }
+            currentRoom = new Darkness().darkness(currentRoom, lastRoom);
 
             ui.askForPrompt();
 
@@ -127,7 +74,9 @@ public class Game {
             switch (userInput) {
                 case "go north", "n" -> {
                     lastRoom = currentRoom;
-                    if (currentRoom.getRoomNorth() != null) {
+                    if (currentRoom.checkIfDoorIsLockedNorth())
+                        ld.doorLocked(currentRoom, userInput);
+                    else if (currentRoom.getRoomNorth() != null) {
                         currentRoom = currentRoom.getRoomNorth();
                         if (currentRoom.checkIfVisited() == false) {
                             currentRoom.setVisitedTrue();
@@ -139,7 +88,9 @@ public class Game {
                 }
                 case "go east", "e" -> {
                     lastRoom = currentRoom;
-                    if (currentRoom.getRoomEast() != null) {
+                    if (currentRoom.checkIfDoorIsLockedEast())
+                        ld.doorLocked(currentRoom, userInput);
+                    else if (currentRoom.getRoomEast() != null) {
                         currentRoom = currentRoom.getRoomEast();
                         if (currentRoom.checkIfVisited() == false) {
                             currentRoom.setVisitedTrue();
@@ -151,7 +102,9 @@ public class Game {
                 }
                 case "go south", "s" -> {
                     lastRoom = currentRoom;
-                    if (currentRoom.getRoomSouth() != null) {
+                    if (currentRoom.checkIfDoorIsLockedSouth())
+                        ld.doorLocked(currentRoom, userInput);
+                    else if (currentRoom.getRoomSouth() != null) {
                         currentRoom = currentRoom.getRoomSouth();
                         if (currentRoom.checkIfVisited() == false) {
                             currentRoom.setVisitedTrue();
@@ -163,7 +116,9 @@ public class Game {
                 }
                 case "go west", "w" -> {
                     lastRoom = currentRoom;
-                    if (currentRoom.getRoomWest() != null) {
+                    if (currentRoom.checkIfDoorIsLockedWest())
+                        ld.doorLocked(currentRoom, userInput);
+                    else if (currentRoom.getRoomWest() != null) {
                         currentRoom = currentRoom.getRoomWest();
                         if (currentRoom.checkIfVisited() == false) {
                             currentRoom.setVisitedTrue();

@@ -9,6 +9,11 @@ public class Room {
   private Room west;
   private boolean visited = false;
   private boolean light =  false;
+  private boolean darkRoom = false;
+  private boolean lockNorth = false;
+  private boolean lockEast = false;
+  private boolean lockSouth = false;
+  private boolean lockWest = false;
 
   Room() {
   }
@@ -18,6 +23,24 @@ public class Room {
   }
   boolean checkIfLightsOn() {
     return light;
+  }
+  boolean checkIfDarkRoom() {
+    return darkRoom;
+  }
+  boolean checkIfDoorIsLockedNorth() {
+    return lockNorth;
+  }
+
+  boolean checkIfDoorIsLockedEast() {
+    return lockEast;
+  }
+
+  boolean checkIfDoorIsLockedSouth() {
+    return lockSouth;
+  }
+
+  boolean checkIfDoorIsLockedWest() {
+    return lockWest;
   }
 
   // Setters
@@ -35,6 +58,41 @@ public class Room {
   }
   void setLightsOff() {
     light = false;
+  }
+  void setDarkRoom() {
+    darkRoom = true;
+  }
+
+  void setLockNorth() {
+    lockNorth = true;
+  }
+
+  void setLockEast() {
+    lockEast = true;
+  }
+
+  void setLockSouth() {
+    lockSouth = true;
+  }
+
+  void setLockWest() {
+    lockWest = true;
+  }
+
+  void setUnlockNorth() {
+    lockNorth = false;
+  }
+
+  void setUnlockEast() {
+    lockEast = false;
+  }
+
+  void setUnlockSouth() {
+    lockSouth = false;
+  }
+
+  void setUnlockWest() {
+    lockWest = false;
   }
   void setName(String name) {
     this.name = name;

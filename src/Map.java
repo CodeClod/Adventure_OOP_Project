@@ -13,11 +13,13 @@ public class Map {
         room2.setName("Short roadway");
         room2.setRoomDescription("a short roadway between two forests. The cobbles lie uneven and are overgrown with grass.");
         room2.setRoomDescriptionShort("a short roadway between two forests.");
+        room2.setLockEast(); //test
 
         room3 = new Room();
         room3.setName("Little Abandoned Town");
         room3.setRoomDescription("a derelict town of little use to anyone. All you can see is rubble and what someone once called home.");
         room3.setRoomDescriptionShort("a derelict town of little use to anyone.");
+        room3.setLockWest(); //test
 
         room4 = new Room();
         room4.setName("Forest river");
@@ -33,6 +35,11 @@ public class Map {
         room6.setName("Haunted forest");
         room6.setRoomDescription("a dark forest, filled with all sorts of thorny plant. You hear strange noises all around you.");
         room6.setRoomDescriptionShort("a dark forest, filled with all sorts of thorny plant.");
+        room6.setDarkRoom();
+        if (room6.checkIfLightsOn()) { //alternative description - lights on
+            room6.setRoomDescription("a light forest, filled with all sorts of thorny plant.");
+            room6.setRoomDescriptionShort("a light forest, filled with all sorts of thorny plant.");
+        }
 
         room7 = new Room();
         room7.setName("Ruined Hilltop Castle");
@@ -43,6 +50,8 @@ public class Map {
         room8.setName("Damp swamp");
         room8.setRoomDescription("a mysterious swamp. There's a slim, old walkway through the bog.");
         room8.setRoomDescriptionShort("a mysterious swamp.");
+        room8.setLockNorth(); //test
+
         room9 = new Room();
         room9.setName("Cabin in the Woods");
         room9.setRoomDescription("a strange little cabin. The cabin is inhabited by three sisters, possibly witches");
