@@ -6,6 +6,7 @@ public class Game {
     Map map = new Map();
     StringBuilder roomCheck = new StringBuilder();
     LockedDoors ld = new LockedDoors();
+    Darkness dark = new Darkness();
 
     void tellsIfVisited(Room room) {
         // Checks if you've gone that way before and tells you
@@ -65,7 +66,10 @@ public class Game {
 
         // Program loop
         do {
-            currentRoom = new Darkness().darkness(currentRoom, lastRoom);
+            if (currentRoom.checkIfDarkRoom() && !currentRoom.checkIfLightsOn())
+            currentRoom = dark.torchOn(currentRoom,lastRoom);
+            else if (currentRoom.checkIfDarkRoom() && currentRoom.checkIfLightsOn())
+            currentRoom = dark.torchOff(currentRoom, lastRoom);
 
             ui.askForPrompt();
 
@@ -75,7 +79,7 @@ public class Game {
                 case "go north", "n" -> {
                     lastRoom = currentRoom;
                     if (currentRoom.checkIfDoorIsLockedNorth())
-                        ld.doorLocked(currentRoom, userInput);
+                        ld.doorLocked(currentRoom, ld.directionsParse(userInput));
                     else if (currentRoom.getRoomNorth() != null) {
                         currentRoom = currentRoom.getRoomNorth();
                         if (currentRoom.checkIfVisited() == false) {
@@ -89,7 +93,7 @@ public class Game {
                 case "go east", "e" -> {
                     lastRoom = currentRoom;
                     if (currentRoom.checkIfDoorIsLockedEast())
-                        ld.doorLocked(currentRoom, userInput);
+                        ld.doorLocked(currentRoom, ld.directionsParse(userInput));
                     else if (currentRoom.getRoomEast() != null) {
                         currentRoom = currentRoom.getRoomEast();
                         if (currentRoom.checkIfVisited() == false) {
@@ -103,7 +107,7 @@ public class Game {
                 case "go south", "s" -> {
                     lastRoom = currentRoom;
                     if (currentRoom.checkIfDoorIsLockedSouth())
-                        ld.doorLocked(currentRoom, userInput);
+                        ld.doorLocked(currentRoom, ld.directionsParse(userInput));
                     else if (currentRoom.getRoomSouth() != null) {
                         currentRoom = currentRoom.getRoomSouth();
                         if (currentRoom.checkIfVisited() == false) {
@@ -117,7 +121,7 @@ public class Game {
                 case "go west", "w" -> {
                     lastRoom = currentRoom;
                     if (currentRoom.checkIfDoorIsLockedWest())
-                        ld.doorLocked(currentRoom, userInput);
+                        ld.doorLocked(currentRoom, ld.directionsParse(userInput));
                     else if (currentRoom.getRoomWest() != null) {
                         currentRoom = currentRoom.getRoomWest();
                         if (currentRoom.checkIfVisited() == false) {
