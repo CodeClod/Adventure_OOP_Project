@@ -7,8 +7,9 @@ public class Game {
     StringBuilder roomCheck = new StringBuilder();
     LockedDoors ld = new LockedDoors();
     Darkness dark = new Darkness();
+    String playerInput;
 
-    void tellsIfVisited(Room room) {
+    void tellIfVisited(Room room) {
         // Checks if you've gone that way before and tells you
         if (room.getRoomEast() != null) {
             if (room.getRoomEast().checkIfVisited()) {
@@ -45,113 +46,52 @@ public class Game {
     }
 
     void runProgram() {
-        // attributter
+        // attributes
         boolean game = true;
         String userInput;
 
-
+        // Creators
         map.createRooms();
-
-        // Sets starting room
-        Room currentRoom = map.getStartRoom();
-        currentRoom.setVisitedTrue();
-
-        // xyzzy stuff
-        Room xyzzy = map.getRoom1();
-        Room teleportRoom;
-        Room lastRoom = null;
+        Player player = new Player(map.getStartRoom());
 
         // Program Start
         ui.programStartupWelcome();
 
         // Program loop
         do {
-            if (currentRoom.checkIfDarkRoom() && !currentRoom.checkIfLightsOn())
-            currentRoom = dark.torchOn(currentRoom,lastRoom);
-            else if (currentRoom.checkIfDarkRoom() && currentRoom.checkIfLightsOn())
-            currentRoom = dark.torchOff(currentRoom, lastRoom);
+            if (player.getCurrentRoom().checkIfDarkRoom() && !player.getCurrentRoom().checkIfLightsOn())
+                player.setCurrentRoom(dark.torchOn(player.getCurrentRoom(),player.getLastRoom()));
+            else if (player.getCurrentRoom().checkIfDarkRoom() && player.getCurrentRoom().checkIfLightsOn())
+                player.setCurrentRoom(dark.torchOff(player.getCurrentRoom(), player.getLastRoom()));
 
             ui.askForPrompt();
+            playerInput = player.playerInput();
 
-            userInput = in.nextLine();
-
-            switch (userInput) {
-                case "go north", "n" -> {
-                    lastRoom = currentRoom;
-                    if (currentRoom.checkIfDoorIsLockedNorth())
-                        ld.doorLocked(currentRoom, ld.directionsParse(userInput));
-                    else if (currentRoom.getRoomNorth() != null) {
-                        currentRoom = currentRoom.getRoomNorth();
-                        if (currentRoom.checkIfVisited() == false) {
-                            currentRoom.setVisitedTrue();
-                            ui.goNorthMessage(currentRoom);
-                        } else
-                            ui.goNorthVisitedMessage(currentRoom);
-                    } else
-                        ui.invalidDirection();
-                }
-                case "go east", "e" -> {
-                    lastRoom = currentRoom;
-                    if (currentRoom.checkIfDoorIsLockedEast())
-                        ld.doorLocked(currentRoom, ld.directionsParse(userInput));
-                    else if (currentRoom.getRoomEast() != null) {
-                        currentRoom = currentRoom.getRoomEast();
-                        if (currentRoom.checkIfVisited() == false) {
-                            currentRoom.setVisitedTrue();
-                            ui.goEastMessage(currentRoom);
-                        } else
-                            ui.goEastVisitedMessage(currentRoom);
-                    } else
-                        ui.invalidDirection();
-                }
-                case "go south", "s" -> {
-                    lastRoom = currentRoom;
-                    if (currentRoom.checkIfDoorIsLockedSouth())
-                        ld.doorLocked(currentRoom, ld.directionsParse(userInput));
-                    else if (currentRoom.getRoomSouth() != null) {
-                        currentRoom = currentRoom.getRoomSouth();
-                        if (currentRoom.checkIfVisited() == false) {
-                            currentRoom.setVisitedTrue();
-                            ui.goSouthMessage(currentRoom);
-                        } else
-                            ui.goSouthVisitedMessage(currentRoom);
-                    } else
-                        ui.invalidDirection();
-                }
-                case "go west", "w" -> {
-                    lastRoom = currentRoom;
-                    if (currentRoom.checkIfDoorIsLockedWest())
-                        ld.doorLocked(currentRoom, ld.directionsParse(userInput));
-                    else if (currentRoom.getRoomWest() != null) {
-                        currentRoom = currentRoom.getRoomWest();
-                        if (currentRoom.checkIfVisited() == false) {
-                            currentRoom.setVisitedTrue();
-                            ui.goWestMessage(currentRoom);
-                        } else
-                            ui.goWestVisitedMessage(currentRoom);
-                    } else
-                        ui.invalidDirection();
-                }
+            // Switch for all commands
+            switch (playerInput) {
+                case "go north", "n" -> player.playerMove("n");
+                case "go east", "e" -> player.playerMove("e");
+                case "go south", "s" -> player.playerMove("s");
+                case "go west", "w" -> player.playerMove("w");
                 case "help" -> ui.listOfCommands();
                 case "exit" -> {
-                    System.out.println("Thanks for playing. Goodbye!");
+                    ui.goodbyeMessage();
                     game = false;
                 }
                 case "look" -> {
-                    ui.lookAround(currentRoom);
-                    tellsIfVisited(currentRoom);
+                    ui.lookAround(player.getCurrentRoom());
+                    tellIfVisited(player.getCurrentRoom());
                 }
+                // TODO make "findItem" command (Probably in player-Class)
+                // case "findItem" ->
                 case "xyzzy" -> {
-                    teleportRoom = currentRoom;
-                    currentRoom = xyzzy;
-                    System.out.println("You teleported to " + currentRoom.getName());
-                    xyzzy = teleportRoom;
+                    player.xyzzy();
                 }
                 default -> ui.invalidCommand();
             }
             System.out.println();
 
-        } while (game == true);
+        } while (game);
 
     }
 

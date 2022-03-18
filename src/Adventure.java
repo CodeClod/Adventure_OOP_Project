@@ -4,4 +4,8 @@ public class Adventure {
     new Game().runProgram();
   }
 
+  void playerMove() {
+
+  }
+
 }

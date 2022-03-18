@@ -31,6 +31,8 @@ public class Map {
     room1.setName("Forest clearing");
     room1.setRoomDescription("a quiet, serene clearing. The mossy undergrowth looks like soft green wool.");
     room1.setRoomDescriptionShort("a quiet, serene clearing.");
+    Item axe = new Item("Axe","A nice looking axe");
+    room1.addItem(axe);
   }
 
   void createRoom2() {
@@ -47,6 +49,9 @@ public class Map {
     room3.setRoomDescription("a derelict town of little use to anyone. All you can see is rubble and what someone once called home.");
     room3.setRoomDescriptionShort("a derelict town of little use to anyone.");
     room3.setLockWest(); //test
+    Item torch = new Item("Torch", "A handy wooden torch");
+    Item gold = new Item ("Gold Coin", "A shiny golden coin");
+    room3.addItem(torch);
   }
 
   void createRoom4() {
@@ -80,6 +85,8 @@ public class Map {
     room7.setName("Ruined Hilltop Castle");
     room7.setRoomDescription("a ruined castle overlooking the river below. It doesn't seem to have been inhabited for a long time");
     room7.setRoomDescriptionShort("a ruined castle overlooking the river below.");
+    Item sword = new Item("Sword", "Surprisingly sharp word");
+    room7.addItem(sword);
   }
 
   void createRoom8() {
@@ -95,6 +102,7 @@ public class Map {
     room9.setName("Cabin in the Woods");
     room9.setRoomDescription("a strange little cabin. The cabin is inhabited by three sisters, possibly witches");
     room9.setRoomDescriptionShort("strange little cabin.");
+    Item magicalAmulet = new Item("Magical Amulet", "A mysterious magical amulet");
   }
 
 

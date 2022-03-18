@@ -63,7 +63,9 @@ public class UserInterface {
   void invalidDirection() {
     System.out.println("Can't go that way.");
   }
-
+  void goodbyeMessage() {
+    System.out.println("Thanks for playing. Goodbye!");
+  }
   void invalidCommand() {
     System.out.println("Invalid command. Type \"help\" for a list of commands.");
   }

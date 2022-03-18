@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 public class Room {
 
   private String name;
@@ -15,6 +17,12 @@ public class Room {
   private boolean lockSouth = false;
   private boolean lockWest = false;
 
+  ArrayList<Item> roomItems = new ArrayList<>();
+
+  void addItem(Item item) {
+    roomItems.add(item);
+  }
+
   Room() {
   }
 
@@ -30,19 +38,15 @@ public class Room {
   boolean checkIfDoorIsLockedNorth() {
     return lockNorth;
   }
-
   boolean checkIfDoorIsLockedEast() {
     return lockEast;
   }
-
   boolean checkIfDoorIsLockedSouth() {
     return lockSouth;
   }
-
   boolean checkIfDoorIsLockedWest() {
     return lockWest;
   }
-
   // Setters
   void setRooms(Room north,Room east, Room south, Room west) {
     this.north = north;
@@ -66,15 +70,12 @@ public class Room {
   void setLockNorth() {
     lockNorth = true;
   }
-
   void setLockEast() {
     lockEast = true;
   }
-
   void setLockSouth() {
     lockSouth = true;
   }
-
   void setLockWest() {
     lockWest = true;
   }
@@ -82,18 +83,16 @@ public class Room {
   void setUnlockNorth() {
     lockNorth = false;
   }
-
   void setUnlockEast() {
     lockEast = false;
   }
-
   void setUnlockSouth() {
     lockSouth = false;
   }
-
   void setUnlockWest() {
     lockWest = false;
   }
+
   void setName(String name) {
     this.name = name;
   }
