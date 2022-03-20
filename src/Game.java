@@ -81,7 +81,7 @@ public class Game {
                 }
                 case "inventory", "invent", "inv" -> {
                     player.displayPlayerInventory();
-                    player.loseItems();
+                    player.dropItems();
                 }
 
                 case "xyzzy" -> {

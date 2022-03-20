@@ -8,87 +8,95 @@ public class Player {
   Scanner in = new Scanner(System.in);
   String input;
   ArrayList<Item> playerItems = new ArrayList<>();
+  ArrayList<Item> toRemove = new ArrayList<>();
 
   void addItemPlayer(Item item) {
     playerItems.add(item);
-    currentRoom.roomItems.remove(item);
+    //currentRoom.roomItems.remove(item);
   }
 
   void removeItemPlayer(Item item) {
-    playerItems.remove(item);
+    //playerItems.remove(item);
     currentRoom.roomItems.add(item);
   }
 
-  void findItems() {
+  void findItems() { // TODO: move all displayed text to UserInterface
+    toRemove.clear();
     System.out.println("Do you want to search for item? Yes (y) or No (n)");
     switch (in.nextLine()) {
       case "y" -> {
-        System.out.println("You search for items.");
-        if (currentRoom.roomItems.size() == 0)
-          System.out.println("You don't find any items");
+        System.out.println("You search the area for items.");
+        if (currentRoom.roomItems.isEmpty())
+          System.out.println("There are no items to be found here.");
         else {
           takeItem();
-
-
-                    /*for (int i = 0; i < currentRoom.roomItems.size(); i++) {
-                        System.out.println("You find a " + currentRoom.roomItems.get(i).shortName);
-                        takeItem(currentRoom.roomItems.get(i));
-                    }
-
-                     */
         }
       }
-      case "n" -> System.out.println("You don't search for items.");
+      case "n" -> System.out.println("You continue onwards");
+      default -> findItems();
     }
   }
 
-  void takeItem() {
+  void takeItem() { // TODO: move all displayed text to UserInterface
     currentRoom.displayRoomInventory();
-    System.out.println("Do you want to take an item? (take+itemname)");
-    String userInput = in.nextLine();
-    if (userInput.contains("take")) {
-      String sub = userInput.substring(5);
-      for (Item item : currentRoom.roomItems
-      ) {
-        if (sub.equalsIgnoreCase(item.shortName)) {
-          addItemPlayer(item);
-          System.out.println("You take the " + item.shortName);
-          takeItem();
-        } else {
-          System.out.println("You found no such item!");
+    System.out.println("Do you want to pick up an item? Yes(y) or No (n) ");
+    switch (in.nextLine()) {
+      case "y" -> {
+        System.out.println("Which item do you want to pick up? (item name)"); // responds to item name instead of "take item".
+        String userInput = in.nextLine();
+        for (Item item : currentRoom.roomItems
+        ) {
+          if (userInput.equalsIgnoreCase(item.shortName)) {
+            toRemove.add(item);
+            System.out.println("You pick up the " + item.shortName);
+            addItemPlayer(item);
+          } else {
+            System.out.println("You found no such item!, try again");
+          }
         }
+        currentRoom.roomItems.removeAll(toRemove);
+        if (!currentRoom.roomItems.isEmpty())
+          takeItem();
+        else System.out.println("There are no more items to be found. You continue onwards");
       }
-    } else System.out.println("You continue your adventure");
+      case "n" -> System.out.println("You continue onwards");
+      default -> takeItem();
+    }
   }
 
-  void loseItems() {
+  void dropItems() { // TODO: move all displayed text to UserInterface.
+    toRemove.clear();
+    boolean noItem = false;
     System.out.println("Do you want to drop an item? Yes (y) or No (n)");
     switch (in.nextLine()) {
       case "y" -> {
-        System.out.println("You go through your inventory.");
         if (playerItems.size() == 0)
-          System.out.println("Your inventory is empty");
+          System.out.println("Your inventory is empty. You continue onwards");
         else {
-          for (int i = 0; i < playerItems.size(); i++) {
+          System.out.println("Which item do you want to drop? (item name)"); // responds to item name instead of "drop item".
+          String userInput = in.nextLine();
+          for (Item item : playerItems
+          ) {
+            if (userInput.equalsIgnoreCase(item.shortName)) {
+              toRemove.add(item);
+              System.out.println("You drop the " + item.shortName);
+              removeItemPlayer(item);
+            } else {
+              noItem = true;
+            }
+          }
+          playerItems.removeAll(toRemove);
+          if (!playerItems.isEmpty()) {
+            if (noItem) {
+              System.out.println("You have no such item!, try again");
+            }
             displayPlayerInventory();
-            System.out.println("Do you want to drop the " + playerItems.get(i).shortName);
-            dropItem(playerItems.get(i));
+            dropItems();
           }
         }
       }
-      case "n" -> System.out.println("You keep your items.");
-    }
-  }
-
-  void dropItem(Item item) {
-    System.out.printf("\nDo you want to drop the %s? Yes (y) or No(n)\n", item.shortName);
-    switch (in.nextLine()) {
-      case "y" -> {
-        removeItemPlayer(item);
-        System.out.println("You drop the " + item.shortName);
-        displayPlayerInventory();
-      }
-      case "n" -> System.out.println("You keep the " + item.shortName);
+      case "n" -> System.out.println("You pack your stuff.");
+      default -> dropItems();
     }
   }
 
@@ -101,12 +109,10 @@ public class Player {
     System.out.println("__________________________________________________");
   }
 
-
   // xyzzy stuff
   Room xyzzy;
   Room teleportRoom;
   Room lastRoom = null;
-
 
   Player(Room StartingRoom) {
     currentRoom = StartingRoom;
@@ -137,7 +143,7 @@ public class Player {
       case "go north", "n" -> {
         lastRoom = currentRoom;
         if (currentRoom.checkIfDoorIsLockedNorth())
-          ld.doorLocked(currentRoom, ld.directionsParse(string));
+          ld.doorLocked(currentRoom, ld.convertDirections(string));
         else if (currentRoom.getRoomNorth() != null) {
           currentRoom = currentRoom.getRoomNorth();
           if ((!currentRoom.checkIfVisited())) {
@@ -152,7 +158,7 @@ public class Player {
       case "go east", "e" -> {
         lastRoom = currentRoom;
         if (currentRoom.checkIfDoorIsLockedEast())
-          ld.doorLocked(currentRoom, ld.directionsParse(string));
+          ld.doorLocked(currentRoom, ld.convertDirections(string));
         else if (currentRoom.getRoomEast() != null) {
           currentRoom = currentRoom.getRoomEast();
           if (!(currentRoom.checkIfVisited())) {
@@ -166,7 +172,7 @@ public class Player {
       case "go south", "s" -> {
         lastRoom = currentRoom;
         if (currentRoom.checkIfDoorIsLockedSouth())
-          ld.doorLocked(currentRoom, ld.directionsParse(string));
+          ld.doorLocked(currentRoom, ld.convertDirections(string));
         else if (currentRoom.getRoomSouth() != null) {
           currentRoom = currentRoom.getRoomSouth();
           if (!(currentRoom.checkIfVisited())) {
@@ -180,7 +186,7 @@ public class Player {
       case "go west", "w" -> {
         lastRoom = currentRoom;
         if (currentRoom.checkIfDoorIsLockedWest())
-          ld.doorLocked(currentRoom, ld.directionsParse(string));
+          ld.doorLocked(currentRoom, ld.convertDirections(string));
         else if (currentRoom.getRoomWest() != null) {
           currentRoom = currentRoom.getRoomWest();
           if (!(currentRoom.checkIfVisited())) {

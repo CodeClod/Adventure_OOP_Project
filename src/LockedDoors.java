@@ -4,14 +4,13 @@ public class LockedDoors {
   Scanner in = new Scanner(System.in);
   UserInterface ui = new UserInterface();
 
-  public String directionsParse(String userInput) {
+  public String convertDirections(String userInput) {
     String direction = null;
-    // Door Locked
     switch (userInput) {
-      case "go north", "n" -> direction = "n";
-      case "go east", "e" -> direction = "e";
-      case "go south", "s" -> direction = "s";
-      case "go west", "w" -> direction = "w";
+      case "go north", "n" -> direction = "north";
+      case "go east", "e" -> direction = "east";
+      case "go south", "s" -> direction = "south";
+      case "go west", "w" -> direction = "west";
     }
     return direction;
   }
@@ -23,23 +22,24 @@ public class LockedDoors {
       door = true;
       ui.askForPromptDoorLocked();
       ui.askForPrompt();
-      switch (in.nextLine()) {
+      String userInput = in.nextLine();
+      switch (userInput) {
         case "p" -> { //u
           door = false;
           switch (direction) {
-            case "n" -> {
+            case "north" -> {
               currentRoom.setUnlockNorth();
               currentRoom.getRoomNorth().setUnlockSouth();
             }
-            case "e" -> {
+            case "east" -> {
               currentRoom.setUnlockEast();
               currentRoom.getRoomEast().setUnlockWest();
             }
-            case "s" -> {
+            case "south" -> {
               currentRoom.setUnlockSouth();
               currentRoom.getRoomSouth().setUnlockNorth();
             }
-            case "w" -> {
+            case "west" -> {
               currentRoom.setUnlockWest();
               currentRoom.getRoomWest().setUnlockEast();
             }
