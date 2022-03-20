@@ -1,11 +1,7 @@
-import java.util.Scanner;
-
 public class Game {
-    Scanner in = new Scanner(System.in);
     UserInterface ui = new UserInterface();
     Map map = new Map();
     StringBuilder roomCheck = new StringBuilder();
-    LockedDoors ld = new LockedDoors();
     Darkness dark = new Darkness();
     String playerInput;
 
@@ -81,18 +77,19 @@ public class Game {
                 case "look" -> {
                     ui.lookAround(player.getCurrentRoom());
                     tellIfVisited(player.getCurrentRoom());
+                    player.findItems();
                 }
-                // TODO make "findItem" command (Probably in player-Class)
-                // case "findItem" ->
+                case "inventory", "invent", "inv" -> {
+                    player.displayPlayerInventory();
+                    player.loseItems();
+                }
+
                 case "xyzzy" -> {
                     player.xyzzy();
                 }
                 default -> ui.invalidCommand();
             }
             System.out.println();
-
         } while (game);
-
     }
-
 }

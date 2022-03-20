@@ -40,7 +40,7 @@ public class Map {
     room2.setName("Short roadway");
     room2.setRoomDescription("a short roadway between two forests. The cobbles lie uneven and are overgrown with grass.");
     room2.setRoomDescriptionShort("a short roadway between two forests.");
-    room2.setLockEast(); //test
+    room2.setLockEast();
   }
 
   void createRoom3() {
@@ -48,10 +48,11 @@ public class Map {
     room3.setName("Little Abandoned Town");
     room3.setRoomDescription("a derelict town of little use to anyone. All you can see is rubble and what someone once called home.");
     room3.setRoomDescriptionShort("a derelict town of little use to anyone.");
-    room3.setLockWest(); //test
+    room3.setLockWest();
     Item torch = new Item("Torch", "A handy wooden torch");
-    Item gold = new Item ("Gold Coin", "A shiny golden coin");
+    Item gold1 = new Item ("Gold Coin", "A shiny golden coin");
     room3.addItem(torch);
+    room3.addItem(gold1);
   }
 
   void createRoom4() {
@@ -86,6 +87,7 @@ public class Map {
     room7.setRoomDescription("a ruined castle overlooking the river below. It doesn't seem to have been inhabited for a long time");
     room7.setRoomDescriptionShort("a ruined castle overlooking the river below.");
     Item sword = new Item("Sword", "Surprisingly sharp word");
+    room7.setLockEast();
     room7.addItem(sword);
   }
 
@@ -94,7 +96,8 @@ public class Map {
     room8.setName("Damp swamp");
     room8.setRoomDescription("a mysterious swamp. There's a slim, old walkway through the bog.");
     room8.setRoomDescriptionShort("a mysterious swamp.");
-    room8.setLockNorth(); //test
+    room8.setLockNorth();
+    room8.setLockWest();
   }
 
   void createRoom9() {
@@ -103,6 +106,9 @@ public class Map {
     room9.setRoomDescription("a strange little cabin. The cabin is inhabited by three sisters, possibly witches");
     room9.setRoomDescriptionShort("strange little cabin.");
     Item magicalAmulet = new Item("Magical Amulet", "A mysterious magical amulet");
+    Item gold2 = new Item ("Gold Coin", "A shiny golden coin");
+    room9.addItem(magicalAmulet);
+    room9.addItem(gold2);
   }
 
 
