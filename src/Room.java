@@ -147,4 +147,13 @@ public class Room {
     return west;
   }
 
+  void displayRoomInventory() {
+    System.out.println();
+    System.out.println("____________________ITEMS FOUND___________________");
+    for (Item roomItem : roomItems) {
+      System.out.println(roomItem.shortName);
+    }
+    System.out.println("__________________________________________________");
+  }
+
 }
