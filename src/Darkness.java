@@ -4,41 +4,40 @@ public class Darkness {
   Scanner in = new Scanner(System.in);
   UserInterface ui = new UserInterface();
 
-  // Torch on
-  public Room torchOn(Room currentRoom, Room lastRoom) {
+  public Room LightsOn(Room currentRoom, Room lastRoom) {
     boolean darkness;
     Room tempRoom = currentRoom;
-    ui.darknessMessage();
+    ui.messageDarkness1();
     do {
       darkness = true;
-      ui.darknessPrompt();
+      ui.messageDarkness2();
       ui.askForPrompt();
       switch (in.nextLine()) {
         case "t" -> {
           darkness = false;
           currentRoom.setLightsOn();
-          ui.torchLit();
+          ui.messageDarkness3();
         }
         case "r" -> {
           darkness = false;
           currentRoom = lastRoom;
           lastRoom = tempRoom;
-          ui.walkAwayFromDarkness(currentRoom);
+          ui.messageDarkness4(currentRoom);
         }
-        default -> ui.defaultMessageDarkness();
+        default -> ui.messageDarknessDefault();
       }
     } while (darkness);
     return currentRoom;
   }
 
   // Torch off
-  public Room torchOff(Room currentRoom, Room lastRoom) {
+  public Room lightsOff(Room currentRoom, Room lastRoom) {
     boolean darkness;
     Room tempRoom = currentRoom;
-    ui.darknessGoneMessage();
+    ui.messageDarknessGone1();
     do {
       darkness = false;
-      ui.darknessGonePrompt();
+      ui.messageDarknessGone2();
       ui.askForPrompt();
       switch (in.nextLine()) {
         case "t" -> {
@@ -46,14 +45,14 @@ public class Darkness {
           currentRoom.setLightsOff();
           currentRoom = lastRoom;
           lastRoom = tempRoom;
-          ui.torchPutOut();
-          ui.fleeDarkness(currentRoom);
+          ui.messageDarknessGone3();
+          ui.messageDarknessGone4(currentRoom);
         }
         case "c" -> {
           darkness = true;
-          ui.walkOnFromDarknessGone();
+          ui.messageDarknessGone5();
         }
-        default -> ui.defaultMessageDarknessGone();
+        default -> ui.messageDarknessGoneDefault();
       }
     } while (!darkness);
     return currentRoom;

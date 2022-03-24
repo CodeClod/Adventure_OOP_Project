@@ -4,53 +4,42 @@ public class LockedDoors {
   Scanner in = new Scanner(System.in);
   UserInterface ui = new UserInterface();
 
-  public String convertDirections(String userInput) {
-    String direction = null;
-    switch (userInput) {
-      case "go north", "n" -> direction = "north";
-      case "go east", "e" -> direction = "east";
-      case "go south", "s" -> direction = "south";
-      case "go west", "w" -> direction = "west";
-    }
-    return direction;
-  }
-
-  public void doorLocked(Room currentRoom, String direction) {
+  public void doorLocked(Room currentRoom, Compass direction) {
     boolean door;
-    ui.doorLockedMessage(direction);
+    ui.messageDoorLocked1(direction);
     do {
       door = true;
-      ui.askForPromptDoorLocked();
+      ui.messageDoorLocked2();
       ui.askForPrompt();
       String userInput = in.nextLine();
       switch (userInput) {
-        case "p" -> { //u
+        case "p" -> {
           door = false;
           switch (direction) {
-            case "north" -> {
-              currentRoom.setUnlockNorth();
-              currentRoom.getRoomNorth().setUnlockSouth();
+            case NORTH -> {
+              currentRoom.setUnlock(direction);
+              currentRoom.getRoom(direction).setUnlock(Compass.SOUTH);
             }
-            case "east" -> {
-              currentRoom.setUnlockEast();
-              currentRoom.getRoomEast().setUnlockWest();
+            case EAST -> {
+              currentRoom.setUnlock(direction);
+              currentRoom.getRoom(direction).setUnlock(Compass.WEST);
             }
-            case "south" -> {
-              currentRoom.setUnlockSouth();
-              currentRoom.getRoomSouth().setUnlockNorth();
+            case SOUTH -> {
+              currentRoom.setUnlock(direction);
+              currentRoom.getRoom(direction).setUnlock(Compass.NORTH);
             }
-            case "west" -> {
-              currentRoom.setUnlockWest();
-              currentRoom.getRoomWest().setUnlockEast();
+            case WEST -> {
+              currentRoom.setUnlock(direction);
+              currentRoom.getRoom(direction).setUnlock(Compass.EAST);
             }
           }
-          ui.doorUnlockedMessage();
+          ui.messageDoorLocked3();
         }
         case "l" -> {
           door = false;
-          ui.walkAwayFromDoorLocked(currentRoom);
+          ui.messageDoorLocked4(currentRoom);
         }
-        default -> ui.defaultMessageDoorLocked();
+        default -> ui.messageDoorLockedDefault();
       }
     } while (door);
   }

@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.List;
 
 public class Room {
 
@@ -11,17 +12,12 @@ public class Room {
   private Room west;
   private boolean visited = false;
   private boolean light = false;
-  private boolean darkRoom = false;
-  private boolean lockNorth = false;
-  private boolean lockEast = false;
-  private boolean lockSouth = false;
-  private boolean lockWest = false;
-  ArrayList<Item> roomItems = new ArrayList<>();
+  private boolean darkness = false;
+  ArrayList<Item> items = new ArrayList<>();
+  List<Compass> lockedDoors = new ArrayList<>();
+  List<Compass> unlockedDoors = new ArrayList<>();
 
-  void addItem(Item item) {
-    roomItems.add(item);
-  }
-
+  //Checks
   boolean checkIfVisited() {
     return visited;
   }
@@ -30,24 +26,12 @@ public class Room {
     return light;
   }
 
-  boolean checkIfDarkRoom() {
-    return darkRoom;
+  boolean checkIfDarkness() {
+    return darkness;
   }
 
-  boolean checkIfDoorIsLockedNorth() {
-    return lockNorth;
-  }
-
-  boolean checkIfDoorIsLockedEast() {
-    return lockEast;
-  }
-
-  boolean checkIfDoorIsLockedSouth() {
-    return lockSouth;
-  }
-
-  boolean checkIfDoorIsLockedWest() {
-    return lockWest;
+  boolean checkIfDoorIsLocked(Compass direction) {
+    return lockedDoors.contains(direction);
   }
 
   // Setters
@@ -71,39 +55,16 @@ public class Room {
   }
 
   void setDarkRoom() {
-    darkRoom = true;
+    darkness = true;
   }
 
-  void setLockNorth() {
-    lockNorth = true;
+  void setLock(Compass direction) {
+    lockedDoors.add(direction);
   }
 
-  void setLockEast() {
-    lockEast = true;
-  }
-
-  void setLockSouth() {
-    lockSouth = true;
-  }
-
-  void setLockWest() {
-    lockWest = true;
-  }
-
-  void setUnlockNorth() {
-    lockNorth = false;
-  }
-
-  void setUnlockEast() {
-    lockEast = false;
-  }
-
-  void setUnlockSouth() {
-    lockSouth = false;
-  }
-
-  void setUnlockWest() {
-    lockWest = false;
+  void setUnlock(Compass direction) {
+    unlockedDoors.add(direction);
+    lockedDoors.remove(direction);
   }
 
   void setName(String name) {
@@ -131,26 +92,35 @@ public class Room {
     return roomDescriptionShort;
   }
 
-  Room getRoomNorth() {
-    return north;
+  Room getRoom( Compass direction) {
+    switch (direction) {
+      case NORTH -> {
+        return north;
+      }
+      case EAST -> {
+        return east;
+      }
+      case SOUTH -> {
+        return south;
+      }
+      case WEST -> {
+        return west;
+      }
+      default -> {
+        return null;
+      }
+    }
   }
 
-  Room getRoomEast() {
-    return east;
-  }
-
-  Room getRoomSouth() {
-    return south;
-  }
-
-  Room getRoomWest() {
-    return west;
+  //Items
+  void addItem(Item item) {
+    items.add(item);
   }
 
   void displayRoomInventory() {
     System.out.println();
     System.out.println("____________________ITEMS FOUND___________________");
-    for (Item roomItem : roomItems) {
+    for (Item roomItem : items) {
       System.out.println(roomItem.shortName);
     }
     System.out.println("__________________________________________________");

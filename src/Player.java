@@ -2,22 +2,24 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Player {
-  Room currentRoom;
+  private Room currentRoom;
+  private Room lastRoom;
+  private Room xyzzy;
   UserInterface ui = new UserInterface();
   LockedDoors ld = new LockedDoors();
+  Darkness dark = new Darkness();
   Scanner in = new Scanner(System.in);
-  String input;
-  ArrayList<Item> playerItems = new ArrayList<>();
+  ArrayList<Item> items = new ArrayList<>();
   ArrayList<Item> toRemove = new ArrayList<>();
 
-  void addItemPlayer(Item item) {
-    playerItems.add(item);
+  void addItem(Item item) {
+    items.add(item);
     //currentRoom.roomItems.remove(item);
   }
 
-  void removeItemPlayer(Item item) {
+  void removeItem(Item item) {
     //playerItems.remove(item);
-    currentRoom.roomItems.add(item);
+    currentRoom.items.add(item);
   }
 
   void findItems() { // TODO: move all displayed text to UserInterface
@@ -26,7 +28,7 @@ public class Player {
     switch (in.nextLine()) {
       case "y" -> {
         System.out.println("You search the area for items.");
-        if (currentRoom.roomItems.isEmpty())
+        if (currentRoom.items.isEmpty())
           System.out.println("There are no items to be found here.");
         else {
           takeItem();
@@ -44,18 +46,18 @@ public class Player {
       case "y" -> {
         System.out.println("Which item do you want to pick up? (item name)"); // responds to item name instead of "take item".
         String userInput = in.nextLine();
-        for (Item item : currentRoom.roomItems
+        for (Item item : currentRoom.items
         ) {
           if (userInput.equalsIgnoreCase(item.shortName)) {
             toRemove.add(item);
             System.out.println("You pick up the " + item.shortName);
-            addItemPlayer(item);
+            addItem(item);
           } else {
             System.out.println("You found no such item!, try again");
           }
         }
-        currentRoom.roomItems.removeAll(toRemove);
-        if (!currentRoom.roomItems.isEmpty())
+        currentRoom.items.removeAll(toRemove);
+        if (!currentRoom.items.isEmpty())
           takeItem();
         else System.out.println("There are no more items to be found. You continue onwards");
       }
@@ -70,23 +72,23 @@ public class Player {
     System.out.println("Do you want to drop an item? Yes (y) or No (n)");
     switch (in.nextLine()) {
       case "y" -> {
-        if (playerItems.size() == 0)
+        if (items.size() == 0)
           System.out.println("Your inventory is empty. You continue onwards");
         else {
           System.out.println("Which item do you want to drop? (item name)"); // responds to item name instead of "drop item".
           String userInput = in.nextLine();
-          for (Item item : playerItems
+          for (Item item : items
           ) {
             if (userInput.equalsIgnoreCase(item.shortName)) {
               toRemove.add(item);
               System.out.println("You drop the " + item.shortName);
-              removeItemPlayer(item);
+              removeItem(item);
             } else {
               noItem = true;
             }
           }
-          playerItems.removeAll(toRemove);
-          if (!playerItems.isEmpty()) {
+          items.removeAll(toRemove);
+          if (!items.isEmpty()) {
             if (noItem) {
               System.out.println("You have no such item!, try again");
             }
@@ -103,16 +105,11 @@ public class Player {
   void displayPlayerInventory() {
     System.out.println();
     System.out.println("____________________INVENTORY_____________________");
-    for (Item playerItem : playerItems) {
+    for (Item playerItem : items) {
       System.out.println(playerItem.shortName);
     }
     System.out.println("__________________________________________________");
   }
-
-  // xyzzy stuff
-  Room xyzzy;
-  Room teleportRoom;
-  Room lastRoom = null;
 
   Player(Room StartingRoom) {
     currentRoom = StartingRoom;
@@ -121,90 +118,47 @@ public class Player {
   }
 
   String playerInput() {
-    input = in.nextLine();
-    return input;
-  }
-
-  Room getCurrentRoom() {
-    return currentRoom;
+    return in.nextLine();
   }
 
   void setCurrentRoom(Room room) {
     currentRoom = room;
   }
 
-  Room getLastRoom() {
-    return lastRoom;
+  public Room getCurrentRoom() {
+    return currentRoom;
   }
 
-  // Tried refactoring the move command... gave up after about 1 hour. It works
-  void playerMove(String string) {
-    switch (string) {
-      case "go north", "n" -> {
-        lastRoom = currentRoom;
-        if (currentRoom.checkIfDoorIsLockedNorth())
-          ld.doorLocked(currentRoom, ld.convertDirections(string));
-        else if (currentRoom.getRoomNorth() != null) {
-          currentRoom = currentRoom.getRoomNorth();
-          if ((!currentRoom.checkIfVisited())) {
-            currentRoom.setVisitedTrue();
-            ui.goNorthMessage(currentRoom);
-          } else
-            ui.goNorthVisitedMessage(currentRoom);
-        } else
-          ui.invalidDirection();
-
-      }
-      case "go east", "e" -> {
-        lastRoom = currentRoom;
-        if (currentRoom.checkIfDoorIsLockedEast())
-          ld.doorLocked(currentRoom, ld.convertDirections(string));
-        else if (currentRoom.getRoomEast() != null) {
-          currentRoom = currentRoom.getRoomEast();
-          if (!(currentRoom.checkIfVisited())) {
-            currentRoom.setVisitedTrue();
-            ui.goEastMessage(currentRoom);
-          } else
-            ui.goEastVisitedMessage(currentRoom);
-        } else
-          ui.invalidDirection();
-      }
-      case "go south", "s" -> {
-        lastRoom = currentRoom;
-        if (currentRoom.checkIfDoorIsLockedSouth())
-          ld.doorLocked(currentRoom, ld.convertDirections(string));
-        else if (currentRoom.getRoomSouth() != null) {
-          currentRoom = currentRoom.getRoomSouth();
-          if (!(currentRoom.checkIfVisited())) {
-            currentRoom.setVisitedTrue();
-            ui.goSouthMessage(currentRoom);
-          } else
-            ui.goSouthVisitedMessage(currentRoom);
-        } else
-          ui.invalidDirection();
-      }
-      case "go west", "w" -> {
-        lastRoom = currentRoom;
-        if (currentRoom.checkIfDoorIsLockedWest())
-          ld.doorLocked(currentRoom, ld.convertDirections(string));
-        else if (currentRoom.getRoomWest() != null) {
-          currentRoom = currentRoom.getRoomWest();
-          if (!(currentRoom.checkIfVisited())) {
-            currentRoom.setVisitedTrue();
-            ui.goWestMessage(currentRoom);
-          } else
-            ui.goWestVisitedMessage(currentRoom);
-        } else
-          ui.invalidDirection();
-      }
-    }
+  void setLastRoom (Room room) {
+    lastRoom = room;
   }
+
+  void playerMove(Compass direction) {
+    setLastRoom(currentRoom);
+        if (currentRoom.checkIfDoorIsLocked(direction))
+          ld.doorLocked(currentRoom, direction);
+        else if (currentRoom.getRoom(direction) != null) {
+          currentRoom = currentRoom.getRoom(direction);
+          if (!(currentRoom.checkIfVisited())) {
+            currentRoom.setVisitedTrue();
+            ui.goMessage(currentRoom, direction);
+          } else
+            ui.goVisitedMessage(currentRoom, direction);
+        } else
+          ui.invalidDirection();
+      }
 
   void xyzzy() {
-    teleportRoom = currentRoom;
+    Room teleportRoom = currentRoom;
     currentRoom = xyzzy;
     System.out.println("You teleported to " + currentRoom.getName());
     xyzzy = teleportRoom;
   }
 
+  void checkForDarkness() {
+    if (currentRoom.checkIfDarkness() && !currentRoom.checkIfLightsOn())
+      setCurrentRoom(dark.LightsOn(currentRoom,lastRoom));
+    else if (currentRoom.checkIfDarkness() && currentRoom.checkIfLightsOn())
+      setCurrentRoom(dark.lightsOff(currentRoom, lastRoom));
+  }
 }
