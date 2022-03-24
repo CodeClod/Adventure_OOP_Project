@@ -2,28 +2,38 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Player {
+  Scanner in;
+  UserInterface ui;
   private Room currentRoom;
   private Room lastRoom;
   private Room xyzzy;
-  UserInterface ui = new UserInterface();
-  LockedDoors ld = new LockedDoors();
-  Darkness dark = new Darkness();
-  Scanner in = new Scanner(System.in);
+  LockedDoors ld;
   ArrayList<Item> items = new ArrayList<>();
-  ArrayList<Item> toRemove = new ArrayList<>();
+  int purse = 0;
 
-  void addItem(Item item) {
-    items.add(item);
-    //currentRoom.roomItems.remove(item);
+  //gold
+  void addToPurse(Gold gold) {
+    purse += gold.getAmount();
   }
 
-  void removeItem(Item item) {
-    //playerItems.remove(item);
-    currentRoom.items.add(item);
+  boolean removeFromPurse(int gold) {
+    if (gold > purse) {
+      return false;
+    } else
+      purse -= gold;
+    return true;
+  }
+
+  //items
+  void addItem(Item item) {
+    items.add(item);
+  }
+
+  void removeItems(ArrayList<Item> list) {
+    items.removeAll(list);
   }
 
   void findItems() { // TODO: move all displayed text to UserInterface
-    toRemove.clear();
     System.out.println("Do you want to search for item? Yes (y) or No (n)");
     switch (in.nextLine()) {
       case "y" -> {
@@ -40,6 +50,7 @@ public class Player {
   }
 
   void takeItem() { // TODO: move all displayed text to UserInterface
+    ArrayList<Item> toRemove = new ArrayList<>();
     currentRoom.displayRoomInventory();
     System.out.println("Do you want to pick up an item? Yes(y) or No (n) ");
     switch (in.nextLine()) {
@@ -51,12 +62,17 @@ public class Player {
           if (userInput.equalsIgnoreCase(item.shortName)) {
             toRemove.add(item);
             System.out.println("You pick up the " + item.shortName);
-            addItem(item);
+            /*if (item.getClass().equals(Gold.class)) {
+              Gold gold = (Gold)item;
+              addToPurse(gold);
+            }
+            else*/
+              addItem(item);
           } else {
             System.out.println("You found no such item!, try again");
           }
         }
-        currentRoom.items.removeAll(toRemove);
+        currentRoom.removeItems(toRemove);
         if (!currentRoom.items.isEmpty())
           takeItem();
         else System.out.println("There are no more items to be found. You continue onwards");
@@ -67,7 +83,7 @@ public class Player {
   }
 
   void dropItems() { // TODO: move all displayed text to UserInterface.
-    toRemove.clear();
+    ArrayList<Item> toRemove = new ArrayList<>();
     boolean noItem = false;
     System.out.println("Do you want to drop an item? Yes (y) or No (n)");
     switch (in.nextLine()) {
@@ -82,12 +98,12 @@ public class Player {
             if (userInput.equalsIgnoreCase(item.shortName)) {
               toRemove.add(item);
               System.out.println("You drop the " + item.shortName);
-              removeItem(item);
+              currentRoom.addItem(item);
             } else {
               noItem = true;
             }
           }
-          items.removeAll(toRemove);
+          removeItems(toRemove);
           if (!items.isEmpty()) {
             if (noItem) {
               System.out.println("You have no such item!, try again");
@@ -111,10 +127,12 @@ public class Player {
     System.out.println("__________________________________________________");
   }
 
-  Player(Room StartingRoom) {
+  Player(Room StartingRoom, UserInterface ui, Scanner in) {
+    this.ui = ui;
+    this.in = in;
+    this.ld = new LockedDoors(ui, in);
     currentRoom = StartingRoom;
     xyzzy = StartingRoom;
-
   }
 
   String playerInput() {
@@ -129,36 +147,33 @@ public class Player {
     return currentRoom;
   }
 
-  void setLastRoom (Room room) {
+  void setLastRoom(Room room) {
     lastRoom = room;
+  }
+
+  public Room getLastRoom() {
+    return lastRoom;
   }
 
   void playerMove(Compass direction) {
     setLastRoom(currentRoom);
-        if (currentRoom.checkIfDoorIsLocked(direction))
-          ld.doorLocked(currentRoom, direction);
-        else if (currentRoom.getRoom(direction) != null) {
-          currentRoom = currentRoom.getRoom(direction);
-          if (!(currentRoom.checkIfVisited())) {
-            currentRoom.setVisitedTrue();
-            ui.goMessage(currentRoom, direction);
-          } else
-            ui.goVisitedMessage(currentRoom, direction);
-        } else
-          ui.invalidDirection();
-      }
+    if (currentRoom.checkIfDoorIsLocked(direction))
+      ld.doorLocked(currentRoom, direction);
+    else if (currentRoom.getRoom(direction) != null) {
+      currentRoom = currentRoom.getRoom(direction);
+      if (!(currentRoom.checkIfVisited())) {
+        currentRoom.setVisitedTrue();
+        ui.goMessage(currentRoom, direction);
+      } else
+        ui.goVisitedMessage(currentRoom, direction);
+    } else
+      ui.invalidDirection();
+  }
 
   void xyzzy() {
     Room teleportRoom = currentRoom;
     currentRoom = xyzzy;
     System.out.println("You teleported to " + currentRoom.getName());
     xyzzy = teleportRoom;
-  }
-
-  void checkForDarkness() {
-    if (currentRoom.checkIfDarkness() && !currentRoom.checkIfLightsOn())
-      setCurrentRoom(dark.LightsOn(currentRoom,lastRoom));
-    else if (currentRoom.checkIfDarkness() && currentRoom.checkIfLightsOn())
-      setCurrentRoom(dark.lightsOff(currentRoom, lastRoom));
   }
 }

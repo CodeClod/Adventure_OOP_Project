@@ -2,7 +2,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Room {
-
   private String name;
   private String roomDescription;
   private String roomDescriptionShort;
@@ -112,9 +111,14 @@ public class Room {
     }
   }
 
+
   //Items
   void addItem(Item item) {
     items.add(item);
+  }
+
+  void removeItems(ArrayList<Item> list) {
+    items.removeAll(list);
   }
 
   void displayRoomInventory() {

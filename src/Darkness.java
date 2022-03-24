@@ -1,47 +1,52 @@
 import java.util.Scanner;
 
 public class Darkness {
-  Scanner in = new Scanner(System.in);
-  UserInterface ui = new UserInterface();
+  Scanner in;
+  UserInterface ui;
 
-  public Room LightsOn(Room currentRoom, Room lastRoom) {
-    boolean darkness;
+  Darkness (UserInterface ui, Scanner in) {
+    this.ui = ui;
+    this.in = in;
+  }
+
+  public Room lightsOn(Room currentRoom, Room lastRoom) {
+    boolean loop;
     Room tempRoom = currentRoom;
     ui.messageDarkness1();
     do {
-      darkness = true;
+      loop = true;
       ui.messageDarkness2();
       ui.askForPrompt();
       switch (in.nextLine()) {
         case "t" -> {
-          darkness = false;
+          loop = false;
           currentRoom.setLightsOn();
           ui.messageDarkness3();
         }
         case "r" -> {
-          darkness = false;
+          loop = false;
           currentRoom = lastRoom;
           lastRoom = tempRoom;
           ui.messageDarkness4(currentRoom);
         }
         default -> ui.messageDarknessDefault();
       }
-    } while (darkness);
+    } while (loop);
     return currentRoom;
   }
 
   // Torch off
   public Room lightsOff(Room currentRoom, Room lastRoom) {
-    boolean darkness;
+    boolean loop;
     Room tempRoom = currentRoom;
     ui.messageDarknessGone1();
     do {
-      darkness = false;
+      loop = false;
       ui.messageDarknessGone2();
       ui.askForPrompt();
       switch (in.nextLine()) {
         case "t" -> {
-          darkness = true;
+          loop = true;
           currentRoom.setLightsOff();
           currentRoom = lastRoom;
           lastRoom = tempRoom;
@@ -49,12 +54,12 @@ public class Darkness {
           ui.messageDarknessGone4(currentRoom);
         }
         case "c" -> {
-          darkness = true;
+          loop = true;
           ui.messageDarknessGone5();
         }
         default -> ui.messageDarknessGoneDefault();
       }
-    } while (!darkness);
+    } while (!loop);
     return currentRoom;
   }
 }

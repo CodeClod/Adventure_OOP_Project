@@ -1,8 +1,13 @@
 import java.util.Scanner;
 
 public class LockedDoors {
-  Scanner in = new Scanner(System.in);
-  UserInterface ui = new UserInterface();
+  Scanner in;
+  UserInterface ui;
+
+  LockedDoors(UserInterface ui, Scanner in) {
+    this.ui = ui;
+    this.in = in;
+  }
 
   public void doorLocked(Room currentRoom, Compass direction) {
     boolean door;

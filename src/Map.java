@@ -50,9 +50,9 @@ public class Map {
     room3.setRoomDescriptionShort("a derelict town of little use to anyone.");
     room3.setLock(Compass.WEST);
     Item torch = new Item("Torch", "A handy wooden torch");
-    Item gold1 = new Item ("Gold Coin", "A shiny golden coin");
+    Item gold = new Gold (10,"Gold Coin", "A shiny golden coin");
     room3.addItem(torch);
-    room3.addItem(gold1);
+    room3.addItem(gold);
   }
 
   void createRoom4() {
@@ -106,9 +106,9 @@ public class Map {
     room9.setRoomDescription("a strange little cabin. The cabin is inhabited by three sisters, possibly witches");
     room9.setRoomDescriptionShort("strange little cabin.");
     Item magicalAmulet = new Item("Magical Amulet", "A mysterious magical amulet");
-    Item gold2 = new Item ("Gold Coin", "A shiny golden coin");
+    Item gold = new Gold (5,"Gold Coin", "A shiny golden coin");
     room9.addItem(magicalAmulet);
-    room9.addItem(gold2);
+    room9.addItem(gold);
   }
 
   Room getStartRoom() {
