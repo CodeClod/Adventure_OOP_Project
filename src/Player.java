@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Locale;
 import java.util.Scanner;
 
 public class Player {
@@ -41,7 +42,7 @@ public class Player {
         if (currentRoom.items.isEmpty())
           System.out.println("There are no items to be found here.");
         else {
-          takeItem();
+          takeAction();
         }
       }
       case "n" -> System.out.println("You continue onwards");
@@ -49,37 +50,51 @@ public class Player {
     }
   }
 
-  void takeItem() { // TODO: move all displayed text to UserInterface
-    ArrayList<Item> toRemove = new ArrayList<>();
+  void takeAction() { // TODO: move all displayed text to UserInterface
+
     currentRoom.displayRoomInventory();
-    System.out.println("Do you want to pick up an item? Yes(y) or No (n) ");
-    switch (in.nextLine()) {
-      case "y" -> {
-        System.out.println("Which item do you want to pick up? (item name)"); // responds to item name instead of "take item".
-        String userInput = in.nextLine();
-        for (Item item : currentRoom.items
-        ) {
-          if (userInput.equalsIgnoreCase(item.getShortname())) {
-            toRemove.add(item);
-            System.out.println("You pick up the " + item.getShortname());
-            if (item.getClass().equals(Gold.class)) {
-              addToPurse((Gold)item);
-            }
-            else
-              addItem(item);
-          } else {
-            System.out.println("You found no such item!, try again"); //todo: check hvorvidt der udskrives flere gange
-          }
-        }
-        currentRoom.removeItems(toRemove);
-        if (!currentRoom.items.isEmpty())
-          takeItem();
-        else System.out.println("There are no more items to be found. You continue onwards");
-      }
-      case "n" -> System.out.println("You continue onwards");
-      default -> takeItem();
+    System.out.println("Take an action (take+item,eat+item or leave) ");
+    String userInput = in.nextLine().toLowerCase(Locale.ROOT);
+
+
+    if (userInput.contains("take")) {
+      userInput = userInput.substring(5);
+      System.out.println(userInput);
+      takeItem(userInput);
     }
+    else if(userInput.contains("eat")) {
+      //userInput = userInput.substring(4);
+      //eatItem (userInput);
+      System.out.println(); // TODO: placeholder.
+    }
+    else if(userInput.contains("leave")){
+      System.out.println("You continue onwards");
+    }
+    else
+      takeAction();
   }
+
+  void takeItem(String string) {
+    ArrayList<Item> toRemove = new ArrayList<>();
+    for (Item item : currentRoom.items
+    ) {
+      if (string.equals(item.getShortname())) {
+        toRemove.add(item);
+        System.out.println("You pick up the " + item.getShortname());
+        if (item.getClass().equals(Gold.class)) {
+          addToPurse((Gold) item);
+        } else
+          addItem(item);
+      } else {
+        System.out.println("You found no such item!, try again"); //todo: check hvorvidt der udskrives flere gange
+      }
+    }
+    currentRoom.removeItems(toRemove);
+    if (!currentRoom.items.isEmpty())
+      takeAction();
+    else System.out.println("There are no more items to be found. You continue onwards");
+  }
+
 
   void dropItems() { // TODO: move all displayed text to UserInterface.
     ArrayList<Item> toRemove = new ArrayList<>();
@@ -122,10 +137,10 @@ public class Player {
     System.out.println("____________________INVENTORY_____________________");
     System.out.println("ITEM:                                      VALUE: ");
     for (Item item : items) {
-      System.out.printf("%-44s %s\n",item.getShortname(),item.getValue());
+      System.out.printf("%-44s %s\n", item.getShortname(), item.getValue());
     }
     System.out.println("                                          AMOUNT: ");
-    System.out.printf("%-44s %d \n","Gold", purseGold);
+    System.out.printf("%-44s %d \n", "Gold", purseGold);
     System.out.println("__________________________________________________");
   }
 
@@ -135,9 +150,9 @@ public class Player {
     this.ld = new LockedDoors(ui, in);
     currentRoom = StartingRoom;
     xyzzy = StartingRoom;
-    Gold gold = new Gold ("Gold Coins", "A small stash of shiny golden coins",20);
+    Gold gold = new Gold("Gold Coins", "A small stash of shiny golden coins", 20);
     addToPurse(gold);
-    Food chicken = new Food("Grilled Chicken","A delicious looking grilled chicken", 5,20);
+    Food chicken = new Food("Grilled Chicken", "A delicious looking grilled chicken", 5, 20);
     addItem(chicken);
   }
 

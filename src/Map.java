@@ -33,6 +33,8 @@ public class Map {
     room1.setRoomDescriptionShort("a quiet, serene clearing.");
     Item axe = new Item("Axe","A nice looking axe",20);
     room1.addItem(axe);
+    Item katana = new Item("Katana","A nice looking katana",90000000);
+    room1.addItem(katana);
   }
 
   void createRoom2() {
