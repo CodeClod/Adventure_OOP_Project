@@ -31,7 +31,7 @@ public class Map {
     room1.setName("Forest clearing");
     room1.setRoomDescription("a quiet, serene clearing. The mossy undergrowth looks like soft green wool.");
     room1.setRoomDescriptionShort("a quiet, serene clearing.");
-    Item axe = new Item("Axe","A nice looking axe");
+    Item axe = new Item("Axe","A nice looking axe",20);
     room1.addItem(axe);
   }
 
@@ -49,8 +49,8 @@ public class Map {
     room3.setRoomDescription("a derelict town of little use to anyone. All you can see is rubble and what someone once called home.");
     room3.setRoomDescriptionShort("a derelict town of little use to anyone.");
     room3.setLock(Compass.WEST);
-    Item torch = new Item("Torch", "A handy wooden torch");
-    Item gold = new Gold (10,"Gold Coin", "A shiny golden coin");
+    Item torch = new Item("Torch", "A handy wooden torch",5);
+    Item gold = new Gold ("Gold Coins", "A small stash of shiny golden coins",10);
     room3.addItem(torch);
     room3.addItem(gold);
   }
@@ -86,7 +86,7 @@ public class Map {
     room7.setName("Ruined Hilltop Castle");
     room7.setRoomDescription("a ruined castle overlooking the river below. It doesn't seem to have been inhabited for a long time");
     room7.setRoomDescriptionShort("a ruined castle overlooking the river below.");
-    Item sword = new Item("Sword", "Surprisingly sharp word");
+    Item sword = new Item("Sword", "Surprisingly sharp word",100);
     room7.setLock(Compass.EAST);
     room7.addItem(sword);
   }
@@ -105,8 +105,8 @@ public class Map {
     room9.setName("Cabin in the Woods");
     room9.setRoomDescription("a strange little cabin. The cabin is inhabited by three sisters, possibly witches");
     room9.setRoomDescriptionShort("strange little cabin.");
-    Item magicalAmulet = new Item("Magical Amulet", "A mysterious magical amulet");
-    Item gold = new Gold (5,"Gold Coin", "A shiny golden coin");
+    Item magicalAmulet = new Item("Magical Amulet", "A mysterious magical amulet",200);
+    Item gold = new Gold ("Gold Coins", "A small stash of shiny golden coins",5);
     room9.addItem(magicalAmulet);
     room9.addItem(gold);
   }

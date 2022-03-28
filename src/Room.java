@@ -125,7 +125,7 @@ public class Room {
     System.out.println();
     System.out.println("____________________ITEMS FOUND___________________");
     for (Item roomItem : items) {
-      System.out.println(roomItem.shortName);
+      System.out.println(roomItem.getShortname());
     }
     System.out.println("__________________________________________________");
   }

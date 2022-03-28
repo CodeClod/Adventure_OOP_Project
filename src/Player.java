@@ -9,18 +9,18 @@ public class Player {
   private Room xyzzy;
   LockedDoors ld;
   ArrayList<Item> items = new ArrayList<>();
-  int purse = 0;
+  int purseGold = 0;
 
   //gold
   void addToPurse(Gold gold) {
-    purse += gold.getAmount();
+    purseGold += gold.getValue();
   }
 
-  boolean removeFromPurse(int gold) {
-    if (gold > purse) {
+  boolean removeFromPurse(int gold) { //TODO: skal muligvis rettes til.
+    if (gold > purseGold) {
       return false;
     } else
-      purse -= gold;
+      purseGold -= gold;
     return true;
   }
 
@@ -59,17 +59,16 @@ public class Player {
         String userInput = in.nextLine();
         for (Item item : currentRoom.items
         ) {
-          if (userInput.equalsIgnoreCase(item.shortName)) {
+          if (userInput.equalsIgnoreCase(item.getShortname())) {
             toRemove.add(item);
-            System.out.println("You pick up the " + item.shortName);
-            /*if (item.getClass().equals(Gold.class)) {
-              Gold gold = (Gold)item;
-              addToPurse(gold);
+            System.out.println("You pick up the " + item.getShortname());
+            if (item.getClass().equals(Gold.class)) {
+              addToPurse((Gold)item);
             }
-            else*/
+            else
               addItem(item);
           } else {
-            System.out.println("You found no such item!, try again");
+            System.out.println("You found no such item!, try again"); //todo: check hvorvidt der udskrives flere gange
           }
         }
         currentRoom.removeItems(toRemove);
@@ -95,9 +94,9 @@ public class Player {
           String userInput = in.nextLine();
           for (Item item : items
           ) {
-            if (userInput.equalsIgnoreCase(item.shortName)) {
+            if (userInput.equalsIgnoreCase(item.getShortname())) {
               toRemove.add(item);
-              System.out.println("You drop the " + item.shortName);
+              System.out.println("You drop the " + item.getShortname());
               currentRoom.addItem(item);
             } else {
               noItem = true;
@@ -106,7 +105,7 @@ public class Player {
           removeItems(toRemove);
           if (!items.isEmpty()) {
             if (noItem) {
-              System.out.println("You have no such item!, try again");
+              System.out.println("You have no such item!, try again"); //todo: check hvorvidt der udskrives flere gange
             }
             displayPlayerInventory();
             dropItems();
@@ -121,9 +120,12 @@ public class Player {
   void displayPlayerInventory() {
     System.out.println();
     System.out.println("____________________INVENTORY_____________________");
-    for (Item playerItem : items) {
-      System.out.println(playerItem.shortName);
+    System.out.println("ITEM:                                      VALUE: ");
+    for (Item item : items) {
+      System.out.printf("%-44s %s\n",item.getShortname(),item.getValue());
     }
+    System.out.println("                                          AMOUNT: ");
+    System.out.printf("%-44s %d \n","Gold", purseGold);
     System.out.println("__________________________________________________");
   }
 
@@ -133,6 +135,10 @@ public class Player {
     this.ld = new LockedDoors(ui, in);
     currentRoom = StartingRoom;
     xyzzy = StartingRoom;
+    Gold gold = new Gold ("Gold Coins", "A small stash of shiny golden coins",20);
+    addToPurse(gold);
+    Food chicken = new Food("Grilled Chicken","A delicious looking grilled chicken", 5,20);
+    addItem(chicken);
   }
 
   String playerInput() {
