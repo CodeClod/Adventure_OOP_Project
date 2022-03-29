@@ -29,7 +29,7 @@ public class Game {
 
     // Creators
     map.createRooms();
-    Player player = new Player(map.getStartRoom(),100, ui, in);
+    Player player = new Player(map.getStartRoom(),100,50,null, ui, in);
 
     // Program Start
     ui.programStartupWelcome();
@@ -64,6 +64,7 @@ public class Game {
           player.takeAction();
         }
         case "health" -> player.showHealth();
+        case "attack" -> player.attack();
         case "xyzzy" -> player.xyzzy();
         default -> ui.invalidCommand();
       }

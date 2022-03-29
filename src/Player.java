@@ -9,19 +9,22 @@ public class Player {
   private Room lastRoom;
   private Room xyzzy;
   private int health;
+  private int purseGold;
+  private Weapon equipped;
+  private int ammunitionPouch;
   LockedDoors ld;
   ArrayList<Item> items = new ArrayList<>();
-  int purseGold = 0;
 
-  Player(Room StartingRoom, int health, UserInterface ui, Scanner in) {
+
+  Player(Room StartingRoom, int health, int purseGold, Weapon equipped, UserInterface ui, Scanner in) {
     this.ui = ui;
     this.in = in;
     this.ld = new LockedDoors(ui, in);
     this.health = health;
+    this.purseGold = purseGold;
+    this.equipped = equipped;
     currentRoom = StartingRoom;
     xyzzy = StartingRoom;
-    Gold gold = new Gold("Gold Coins", "A small stash of shiny golden coins", 20);
-    addToPurse(gold);
     Food steak = new Food("Steak", "A delicious looking steak", 10, 40);
     addItem(steak);
     Food chicken = new Food("Grilled Chicken", "A delicious looking grilled chicken", 5, 20);
@@ -70,7 +73,7 @@ public class Player {
   void takeAction() {
     currentRoom.displayRoomInventory();
     displayPlayerInventory();
-    System.out.println("Take an action (take+item,drop+item,eat+item or leave) ");
+    System.out.println("Take an action (take+item, drop+item, eat+item, equip+item, unequip+item or leave/l) ");
     String userInput = in.nextLine().toLowerCase(Locale.ROOT);
 
     if (userInput.contains("take")) {
@@ -83,7 +86,11 @@ public class Player {
     } else if (userInput.contains("eat")) {
       userInput = userInput.substring(4);
       eat(userInput);
-    } else if (userInput.contains("leave")) {
+    } else if (userInput.contains("equip")) {
+      String userInputAction = userInput.substring(0, 5);
+      userInput = userInput.substring(6);
+      equipItem(userInput, userInputAction);
+    } else if (userInput.contains("leave") || userInput.contains("l")) {
       System.out.println("You continue onwards");
     } else
       takeAction();
@@ -141,6 +148,28 @@ public class Player {
     }
   }
 
+  void equipItem(String input, String action) {
+    boolean noItem = false;
+    for (Item item : items
+    ) {
+      if ((input.equalsIgnoreCase(item.getShortname()) && action.equalsIgnoreCase("equip")) && (item.getClass().equals(MeleeWeapon.class) || item.getClass().equals(RangedWeapon.class))) {
+        System.out.println("You equip the " + item.getShortname());
+        equipped = (Weapon) item;
+      } else {
+        noItem = true;
+      }
+    }
+    if (equipped != null && action.contains("un")) {
+      equipped = null;
+    }
+    if (!items.isEmpty()) {
+      if (noItem) {
+        System.out.println("You have no such weapon!, try again");
+      }
+      takeAction();
+    } else System.out.println("Your inventory is empty. You continue onwards");
+  }
+
   void showHealth() {
     if (health == 100) {
       System.out.println("You're at " + health + " health. You're quite healthy.");
@@ -184,10 +213,9 @@ public class Player {
 
         }
       } else if (string.equalsIgnoreCase(item.getShortname()) && !item.getClass().equals(Food.class)) {
-        System.out.println("You can't eat that "+item.getShortname());
+        System.out.println("You can't eat that " + item.getShortname());
         notEatable = true;
-      }
-      else {
+      } else {
         noItem = true;
       }
     }
@@ -201,14 +229,18 @@ public class Player {
   }
 
   void displayPlayerInventory() {
-    System.out.println();
     System.out.println("____________________INVENTORY_____________________");
     System.out.println("ITEM:                                      VALUE: ");
     for (Item item : items) {
       System.out.printf("%-44s %s\n", item.getShortname(), item.getValue());
     }
     System.out.println("__________________________________________________");
-    System.out.printf("%-44s %d \n", "Purse (gold):", purseGold);
+    System.out.printf("%-44s %d \n", "PURSE (GOLD):", purseGold);
+    if (equipped != null)
+      System.out.println("EQUIPPED: " + equipped.getShortname());
+    else
+      System.out.println("You have no weapon equipped!");
+    System.out.println();
   }
 
   String playerInput() {
@@ -251,5 +283,16 @@ public class Player {
     currentRoom = xyzzy;
     System.out.println("You teleported to " + currentRoom.getName());
     xyzzy = teleportRoom;
+  }
+
+  public void attack() {
+    if (equipped != null) {
+      if (equipped.getClass().equals(MeleeWeapon.class)) {
+        System.out.printf("You attack an invisible enemy and deal %s damage to the air!!!\n", equipped.getDamage());
+      } else if (equipped.getClass().equals(RangedWeapon.class) && ammunitionPouch > 0) {
+        ammunitionPouch = -1;
+        System.out.printf("You attack an invisible enemy and deal %s damage to the air!!!\n", equipped.getDamage());
+      }
+    } else System.out.println("You can't attack. You have no weapon equipped");
   }
 }
