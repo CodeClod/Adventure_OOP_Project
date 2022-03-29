@@ -12,6 +12,7 @@ public class Room {
   private boolean visited = false;
   private boolean light = false;
   private boolean darkness = false;
+  private boolean searched = false;
   ArrayList<Item> items = new ArrayList<>();
   List<Compass> lockedDoors = new ArrayList<>();
   List<Compass> unlockedDoors = new ArrayList<>();
@@ -55,6 +56,10 @@ public class Room {
 
   void setDarkRoom() {
     darkness = true;
+  }
+
+  void setSearched() {
+    searched = true;
   }
 
   void setLock(Compass direction) {
@@ -111,7 +116,6 @@ public class Room {
     }
   }
 
-
   //Items
   void addItem(Item item) {
     items.add(item);
@@ -124,10 +128,15 @@ public class Room {
   void displayRoomInventory() {
     System.out.println();
     System.out.println("____________________ITEMS FOUND___________________");
-    for (Item roomItem : items) {
-      System.out.println(roomItem.getShortname());
+    if(searched) {
+      System.out.println("ITEM:                                      VALUE: ");
+      for (Item item : items) {
+        System.out.printf("%-44s %s\n", item.getShortname(), item.getValue());
+      }
     }
-    System.out.println("__________________________________________________");
+    else
+      System.out.println("Area not searched");
+    //System.out.println("__________________________________________________");
   }
 
 }
