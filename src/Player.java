@@ -1,6 +1,4 @@
-import java.util.ArrayList;
-import java.util.Locale;
-import java.util.Scanner;
+import java.util.*;
 
 public class Player {
   Scanner in;
@@ -11,6 +9,95 @@ public class Player {
   LockedDoors ld;
   ArrayList<Item> items = new ArrayList<>();
   int purseGold = 0;
+  int purse = 0;
+  private int health = 100;
+
+
+  void showHealth() {
+    if (health < 100){
+      System.out.println("You're at " + health + " health. You're quite healthy.");
+    }
+    else if (health <= 80) {
+      System.out.println("You're at " + health + " health. You got some scapes, but you're alright.");
+    }
+    else if (health <= 60){
+      System.out.println("You're at " + health + " health. You're slightly hurt, maybe you should eat a fruit?");
+    }
+    else if (health <= 40){
+      System.out.println("You're at " + health + " health. You're quite hurt, be careful...");
+    }
+    else if (health <= 20){
+      System.out.println("You're at " + health + " health. You're seriously hurt, you need immediate healing!");
+    }
+  }
+
+  void loseHealth(int health) {
+    this.health -= health;
+  }
+  void getHealth(int health) {
+    this.health += health;
+  }
+
+  // checks both rooms for name and eat's it if it's able
+  void checkBothRooms(ArrayList arrayList, String itemName) {
+    Iterator itr = arrayList.iterator();
+    while (itr.hasNext()) {
+      Item itemInList = (Item)itr.next();
+      if (itemInList.getShortname().equalsIgnoreCase(itemName)){
+        if (itemInList instanceof Food) {
+          System.out.println("You ate the " + itemInList.getShortname().toLowerCase(Locale.ROOT));
+          System.out.println("...");
+          if (((Food) itemInList).getHealing() > 0) {
+            System.out.println("You got " + ((Food) itemInList).getHealing() + " health");
+            health += ((Food) itemInList).getHealing();
+          }
+          else if (((Food) itemInList).getHealing() < 0) {
+            System.out.println("You lost " + ((Food) itemInList).getHealing() + " health");
+            health -= ((Food) itemInList).getHealing();
+          }
+          itr.remove();
+        }
+        else
+          System.out.println("You can't eat " + itemInList.getShortname());
+      }
+    }
+  }
+
+
+
+  // Hvis man finder et item i items så adder man 1 for at komme videre (i slutningen af arrayet)
+  void eat(String item) {
+    checkBothRooms(items, item);
+    checkBothRooms(currentRoom.items, item);
+  }
+
+
+/*
+  void eat(String item) {
+    ArrayList<Item> tempList = items;
+    for (int i = 0; i < tempList.size(); i++) {
+      if (tempList.get(i).getShortname().equalsIgnoreCase(item)){
+        if (tempList.get(i) instanceof Food) {
+          System.out.println("You ate the " + tempList.get(i).getShortname().toLowerCase(Locale.ROOT));
+          System.out.println("...");
+          System.out.println("You got " + tempList + " ");
+          if (((Food) tempList.get(i)).getHealing() > 0) {
+            System.out.println("You got " + ((Food) tempList.get(i)).getHealing() + " health");
+            health += ((Food) tempList.get(i)).getHealing();
+          }
+          else if (((Food) items.get(i)).getHealing() < 0) {
+            System.out.println("You lost " + ((Food) tempList.get(i)).getHealing() + " health");
+            health -= ((Food) tempList.get(i)).getHealing();
+          }
+          items.remove(i);
+        }
+      }
+      else
+        System.out.println("There's no such item");
+    }
+  }
+
+ */
 
   //gold
   void addToPurse(Gold gold) {
@@ -56,14 +143,14 @@ public class Player {
     System.out.println("Take an action (take+item,eat+item or leave) ");
     String userInput = in.nextLine().toLowerCase(Locale.ROOT);
 
-
     if (userInput.contains("take")) {
       userInput = userInput.substring(5);
       System.out.println(userInput);
       takeItem(userInput);
     }
     else if(userInput.contains("eat")) {
-      //userInput = userInput.substring(4);
+      userInput = userInput.substring(4);
+      eat(userInput);
       //eatItem (userInput);
       System.out.println(); // TODO: placeholder.
     }
@@ -78,7 +165,7 @@ public class Player {
     ArrayList<Item> toRemove = new ArrayList<>();
     for (Item item : currentRoom.items
     ) {
-      if (string.equals(item.getShortname())) {
+      if (string.equalsIgnoreCase(item.getShortname())) {
         toRemove.add(item);
         System.out.println("You pick up the " + item.getShortname());
         if (item.getClass().equals(Gold.class)) {

@@ -6,6 +6,7 @@ public class UserInterface {
     System.out.println("\t\"look\" Take a look at current location.");
     System.out.println("\t\"exit\" Exits the game.");
     System.out.println("\t\"go north/south/east/west\" OR n/s/e/w, to move in a direction.");
+    System.out.println("\t\"inventory/invent/inv\" to check player inventory");
   }
 
   void programStartupWelcome() {

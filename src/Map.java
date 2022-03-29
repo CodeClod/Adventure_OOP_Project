@@ -24,6 +24,7 @@ public class Map {
     room9.setRooms(room6, null, null, room8);
 
     startRoom = room1;
+    room1.setVisitedTrue();
   }
 
   void createRoom1() {
@@ -33,6 +34,8 @@ public class Map {
     room1.setRoomDescriptionShort("a quiet, serene clearing.");
     Item axe = new Item("Axe","A nice looking axe",20);
     room1.addItem(axe);
+    Item apple = new Food("Apple","A shiny red apple",5,10);
+    room1.addItem(apple);
     Item katana = new Item("Katana","A nice looking katana",90000000);
     room1.addItem(katana);
   }

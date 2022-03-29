@@ -64,8 +64,9 @@ public class Game {
           player.displayPlayerInventory();
           player.dropItems();
         }
-
+        case "health" -> player.showHealth();
         case "xyzzy" -> player.xyzzy();
+        case "eat" -> player.eat("apple");
         default -> ui.invalidCommand();
       }
       System.out.println();

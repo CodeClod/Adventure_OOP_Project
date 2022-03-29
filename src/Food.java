@@ -6,6 +6,7 @@ public class Food extends Item{
     this.healing = healing;
   }
 
+
   public int getHealing() {
     return healing;
   }
