@@ -1,12 +1,12 @@
 public class Food extends Item{
-  private final int healing;
+  private final int healthPoints;
 
-  Food(String shortName, String longName, int value, int healing) {
+  Food(String shortName, String longName, int value, int healthPoints) {
     super(shortName, longName, value);
-    this.healing = healing;
+    this.healthPoints = healthPoints;
   }
 
-  public int getHealing() {
-    return healing;
+  public int getHealthPoints() {
+    return healthPoints;
   }
 }

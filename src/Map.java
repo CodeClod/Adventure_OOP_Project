@@ -31,9 +31,9 @@ public class Map {
     room1.setName("Forest clearing");
     room1.setRoomDescription("a quiet, serene clearing. The mossy undergrowth looks like soft green wool.");
     room1.setRoomDescriptionShort("a quiet, serene clearing.");
-    Item axe = new Item("Axe","A nice looking axe",20);
+    Weapon axe = new Weapon("Axe","A nice looking axe",20, 5);
     room1.addItem(axe);
-    Item katana = new Item("Katana","A nice looking katana",90000000);
+    Weapon katana = new Weapon("Katana","A nice looking katana",9001, 10);
     room1.addItem(katana);
   }
 
@@ -88,7 +88,7 @@ public class Map {
     room7.setName("Ruined Hilltop Castle");
     room7.setRoomDescription("a ruined castle overlooking the river below. It doesn't seem to have been inhabited for a long time");
     room7.setRoomDescriptionShort("a ruined castle overlooking the river below.");
-    Item sword = new Item("Sword", "Surprisingly sharp word",100);
+    Weapon sword = new Weapon("Sword", "Surprisingly sharp word",100, 8);
     room7.setLock(Compass.EAST);
     room7.addItem(sword);
   }
