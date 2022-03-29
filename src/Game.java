@@ -37,7 +37,7 @@ public class Game {
     // Program loop
     do {
       if (player.getCurrentRoom().checkIfDarkness() && !player.getCurrentRoom().checkIfLightsOn())
-        player.setCurrentRoom(dark.lightsOn(player.getCurrentRoom(), player.getLastRoom()));
+        player.setCurrentRoom(dark.lightsOn(player.getCurrentRoom(), player.getLastRoom(),player.getEquipped()));
       else if (player.getCurrentRoom().checkIfDarkness() && player.getCurrentRoom().checkIfLightsOn())
         player.setCurrentRoom(dark.lightsOff(player.getCurrentRoom(), player.getLastRoom()));
 

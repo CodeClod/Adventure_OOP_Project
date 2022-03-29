@@ -51,7 +51,7 @@ public class Map {
     room3.setRoomDescription("a derelict town of little use to anyone. All you can see is rubble and what someone once called home.");
     room3.setRoomDescriptionShort("a derelict town of little use to anyone.");
     room3.setLock(Compass.WEST);
-    Item torch = new Item("Torch", "A handy wooden torch",5);
+    Weapon torch = new MeleeWeapon("Torch", "A handy wooden torch",5,4);
     Item gold = new Gold ("Gold Coins", "A small stash of shiny golden coins",10);
     room3.addItem(torch);
     room3.addItem(gold);

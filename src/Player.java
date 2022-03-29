@@ -31,6 +31,10 @@ public class Player {
     addItem(chicken);
   }
 
+  Weapon getEquipped() {
+    return equipped;
+  }
+
   //gold
   void addToPurse(Gold gold) {
     purseGold += gold.getValue();
@@ -80,17 +84,20 @@ public class Player {
       userInput = userInput.substring(5);
       takeItem(userInput);
     }
-    if (userInput.contains("drop")) {
+    else if (userInput.contains("drop")) {
       userInput = userInput.substring(5);
       dropItem(userInput);
-    } else if (userInput.contains("eat")) {
+    }
+    else if (userInput.contains("eat")) {
       userInput = userInput.substring(4);
       eat(userInput);
-    } else if (userInput.contains("equip")) {
+    }
+    else if (userInput.contains("equip")) {
       String userInputAction = userInput.substring(0, 5);
       userInput = userInput.substring(6);
       equipItem(userInput, userInputAction);
-    } else if (userInput.contains("leave") || userInput.contains("l")) {
+    }
+    else if (userInput.contains("leave") || userInput.contains("l")) {
       System.out.println("You continue onwards");
     } else
       takeAction();
@@ -152,10 +159,11 @@ public class Player {
     boolean noItem = false;
     for (Item item : items
     ) {
-      if ((input.equalsIgnoreCase(item.getShortname()) && action.equalsIgnoreCase("equip")) && (item.getClass().equals(MeleeWeapon.class) || item.getClass().equals(RangedWeapon.class))) {
+      if ((input.equalsIgnoreCase(item.getShortname()) && action.equalsIgnoreCase("equip")) &&
+          (item.getClass().equals(MeleeWeapon.class) || item.getClass().equals(RangedWeapon.class))) {
         System.out.println("You equip the " + item.getShortname());
         equipped = (Weapon) item;
-      } else {
+      }else {
         noItem = true;
       }
     }
@@ -266,7 +274,7 @@ public class Player {
   void playerMove(Compass direction) {
     setLastRoom(currentRoom);
     if (currentRoom.checkIfDoorIsLocked(direction))
-      ld.doorLocked(currentRoom, direction);
+      ld.doorLocked(currentRoom, direction, equipped);
     else if (currentRoom.getRoom(direction) != null) {
       currentRoom = currentRoom.getRoom(direction);
       if (!(currentRoom.checkIfVisited())) {

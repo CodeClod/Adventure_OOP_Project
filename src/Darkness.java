@@ -1,15 +1,17 @@
+import java.util.ArrayList;
+import java.util.Objects;
 import java.util.Scanner;
 
 public class Darkness {
   Scanner in;
   UserInterface ui;
 
-  Darkness (UserInterface ui, Scanner in) {
+  Darkness(UserInterface ui, Scanner in) {
     this.ui = ui;
     this.in = in;
   }
 
-  public Room lightsOn(Room currentRoom, Room lastRoom) {
+  public Room lightsOn(Room currentRoom, Room lastRoom, Weapon equipped) {
     boolean loop;
     Room tempRoom = currentRoom;
     ui.messageDarkness1();
@@ -19,9 +21,11 @@ public class Darkness {
       ui.askForPrompt();
       switch (in.nextLine()) {
         case "t" -> {
-          loop = false;
-          currentRoom.setLightsOn();
-          ui.messageDarkness3();
+          if (equipped != null && Objects.equals(equipped.getShortname(), "Torch")) {
+            currentRoom.setLightsOn();
+            ui.messageDarkness3();
+            loop = false;
+          } else ui.messageDarknessDefault();
         }
         case "r" -> {
           loop = false;
