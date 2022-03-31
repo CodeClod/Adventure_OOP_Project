@@ -56,8 +56,9 @@ public class Game {
         }
         case "look" -> {
           ui.lookAround(player.getCurrentRoom());
-          if (!player.getCurrentRoom().checkIfContainsNPC())
+          if (player.getCurrentRoom().getNpc()!= null ) {
             System.out.println(player.getCurrentRoom().getNpc().getDescriptionLong());
+          }
           tellIfVisited(player.getCurrentRoom());
           player.findItems();
         }
@@ -66,7 +67,7 @@ public class Game {
         case "attack" -> player.attack();
         case "xyzzy" -> player.xyzzy();
         case "talk" -> {
-          if (!player.getCurrentRoom().checkIfContainsNPC())
+          if (player.getCurrentRoom().getNpc()!=null)
           player.talkAction();
           else
             System.out.println("There's no one around to talk to.");

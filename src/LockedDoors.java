@@ -49,6 +49,9 @@ public class LockedDoors {
         case "l" -> {
           door = false;
           ui.messageDoorLocked4(currentRoom);
+          if (currentRoom.getNpc()!=null) {
+            System.out.println(currentRoom.getNpc().getDescriptionLong());
+          }
         }
         default -> ui.messageDoorLockedDefault();
       }

@@ -12,7 +12,7 @@ public class Player {
   private int health;
   private int purseGold;
   private Weapon equipped;
-  private int ammunitionPouch;
+  private int ammunitionQuiver;
   LockedDoors ld;
   ArrayList<Item> items = new ArrayList<>();
 
@@ -52,6 +52,20 @@ public class Player {
   void removeFromPurse(int gold) {
       purseGold -= gold;
   }
+
+  //ammunition - arrows - add/remove
+  void addToQuiver(Ammunition ammo) {
+    ammunitionQuiver += ammo.getAmount();
+  }
+
+  void addToQuiver(int ammo) {
+    ammunitionQuiver += ammo;
+  }
+
+  void removeFromQuiver(int ammo) {
+    ammunitionQuiver -= ammo;
+  }
+
 
   // Health - Status & add/remove
   void showHealth() {
@@ -125,7 +139,10 @@ public class Player {
         System.out.println("You pick up the " + item.getShortName());
         if (item.getClass().equals(Gold.class)) {
           addToPurse((Gold) item);
-        } else
+        } else if (item.getClass().equals(Ammunition.class)) {
+          addToQuiver((Ammunition) item);
+        }
+        else
           addItem(item);
       } else {
         noItem = true;
@@ -276,7 +293,7 @@ public class Player {
       if (!(currentRoom.checkIfVisited())) {
         currentRoom.setVisitedTrue();
         ui.goMessage(currentRoom, direction);
-        if (!getCurrentRoom().checkIfContainsNPC())
+        if (getCurrentRoom().getNpc()!=null)
           System.out.println(getCurrentRoom().getNpc().getDescriptionLong());
       } else
         ui.goVisitedMessage(currentRoom, direction);
@@ -297,9 +314,10 @@ public class Player {
     if (equipped != null) {
       if (equipped.getClass().equals(MeleeWeapon.class)) {
         System.out.printf("You attack an invisible enemy and deal %s damage to the air!!!\n", equipped.getDamage());
-      } else if (equipped.getClass().equals(RangedWeapon.class) && ammunitionPouch > 0) {
-        ammunitionPouch = -1;
+      } else if (equipped.getClass().equals(RangedWeapon.class) && ammunitionQuiver > 0) {
+        removeFromQuiver(1);
         System.out.printf("You attack an invisible enemy and deal %s damage to the air!!!\n", equipped.getDamage());
+        System.out.printf("You have %s left.\n",getAmmunitionQuiver());
       }
     } else System.out.println("You can't attack. You have no weapon equipped");
   }
@@ -311,7 +329,11 @@ public class Player {
     String userInput = in.nextLine().toLowerCase(Locale.ROOT); // TODO: add loop for arraylist if room contains multiple NPCs
     if (userInput.contains("merchant")) {
       talkToMerchant();
-    } else if (userInput.contains("leave") || userInput.contains("l")) {
+    } else if (userInput.contains("witches"))
+      talkToWitches();
+    else if (userInput.contains("hermit"))
+      talkToHermit();
+    else if (userInput.contains("leave") || userInput.contains("l")) {
       System.out.println("You continue onwards");
     } else
       talkAction();
@@ -321,6 +343,16 @@ public class Player {
     System.out.printf("You are greeted by the %s, his name is %s. He is %s\n", currentRoom.getNpc().getClassDescription(), currentRoom.getNpc().getName(), currentRoom.getNpc().getDescriptionShort());
     System.out.println("He shows you his inventory.");
     merchantTakeAction();
+  }
+
+  public void talkToWitches() {
+    System.out.printf("You are greeted by one of the %s, her name is %s. She is %s\n", currentRoom.getNpc().getClassDescription(), currentRoom.getNpc().getName(), currentRoom.getNpc().getDescriptionShort());
+    System.out.println("She shows you her inventory.");
+    merchantTakeAction();
+  }
+
+  public void talkToHermit() {
+    System.out.println("The hermit completely ignores you, and keeps dancing around the wagon wheel!");
   }
 
   public void merchantTakeAction() {
@@ -374,6 +406,9 @@ public class Player {
         removeFromPurse(item.getValue());
         currentRoom.getNpc().addToPurse(item.getValue());
         System.out.println("You buy the " + item.getShortName());
+        if (item.getClass().equals(Ammunition.class)) {
+          addToQuiver((Ammunition) item);
+        }else
         addItem(item);
       } else {
         noItem = true;
@@ -424,10 +459,14 @@ public class Player {
     System.out.println("____________________INVENTORY_____________________");
     System.out.println("ITEM:                                      VALUE: ");
     for (Item item : items) {
-      System.out.printf("%-44s %s\n", item.getShortName(), item.getValue());
+      if (item.getClass().equals(Ammunition.class))
+      System.out.printf("%-44s %s (%s)\n", item.getShortName(), item.getValue(), ((Ammunition) item).getAmount());
+      else
+        System.out.printf("%-44s %s\n", item.getShortName(), item.getValue());
     }
     System.out.println("__________________________________________________");
     System.out.printf("%-44s %d \n", "PURSE (GOLD):", purseGold);
+    System.out.printf("%-44s %d \n", "QUIVER (ARROWS):", ammunitionQuiver);
     if (equipped != null)
       System.out.println("EQUIPPED: " + equipped.getShortName());
     else
@@ -453,7 +492,11 @@ public class Player {
     return lastRoom;
   }
 
-  Weapon getEquipped() {
+  public Weapon getEquipped() {
     return equipped;
+  }
+
+  public int getAmmunitionQuiver() {
+    return ammunitionQuiver;
   }
 }

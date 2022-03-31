@@ -31,6 +31,9 @@ public class Darkness {
           currentRoom = lastRoom;
           lastRoom = tempRoom;
           ui.messageDarkness4(currentRoom);
+          if (currentRoom.getNpc()!=null) {
+            System.out.println(currentRoom.getNpc().getDescriptionLong());
+          }
         }
         default -> ui.messageDarknessDefault();
       }
@@ -55,6 +58,9 @@ public class Darkness {
           lastRoom = tempRoom;
           ui.messageDarknessGone3();
           ui.messageDarknessGone4(currentRoom);
+          if (currentRoom.getNpc()!=null) {
+            System.out.println(currentRoom.getNpc().getDescriptionLong());
+          }
         }
         case "c" -> {
           loop = true;

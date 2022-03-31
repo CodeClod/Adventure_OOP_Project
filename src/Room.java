@@ -14,7 +14,6 @@ public class Room {
   private boolean light = false;
   private boolean darkness = false;
   private boolean searched = false;
-  private boolean containsNPC = false;
   ArrayList<Item> items = new ArrayList<>();
   List<Compass> lockedDoors = new ArrayList<>();
   List<Compass> unlockedDoors = new ArrayList<>();
@@ -43,10 +42,6 @@ public class Room {
     return lockedDoors.contains(direction);
   }
 
-  boolean checkIfContainsNPC () {
-    return containsNPC;
-  }
-
   // Setters
   void setRooms(Room north, Room east, Room south, Room west) {
     this.north = north;
@@ -73,10 +68,6 @@ public class Room {
 
   void setSearched() {
     searched = true;
-  }
-
-  void setContainsNPC() {
-    containsNPC = true;
   }
 
   void setLock(Compass direction) {
