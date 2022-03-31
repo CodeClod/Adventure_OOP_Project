@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Locale;
 import java.util.Scanner;
 
@@ -54,25 +55,21 @@ public class Player {
 
   // Health - Status & add/remove
   void showHealth() {
-    if (health == 100) {
+    if (health == 100){
       System.out.println("You're at " + health + " health. You're quite healthy.");
-    } else if (health <= 80) {
-      System.out.println("You're at " + health + " health. You got some scrapes, but you're alright.");
-    } else if (health <= 60) {
+    }
+    else if (health >= 80) {
+      System.out.println("You're at " + health + " health. You got some scapes, but you're alright.");
+    }
+    else if (health >= 60){
       System.out.println("You're at " + health + " health. You're slightly hurt, maybe you should eat a fruit?");
-    } else if (health <= 40) {
+    }
+    else if (health >= 40){
       System.out.println("You're at " + health + " health. You're quite hurt, be careful...");
-    } else if (health <= 20) {
+    }
+    else if (health >= 20){
       System.out.println("You're at " + health + " health. You're seriously hurt, you need immediate healing!");
     }
-  }
-
-  void loseHealth(int health) {
-    this.health -= health;
-  }
-
-  void getHealth(int health) {
-    this.health += health;
   }
 
   //Actions - Items
@@ -172,6 +169,42 @@ public class Player {
     }
   }
 
+  void eat(String item) {
+    boolean fullstomach = checkBothRooms(currentRoom.items, item);
+    if (!fullstomach) {
+      checkBothRooms(items, item);
+    }
+    takeAction();
+  }
+
+  boolean checkBothRooms(ArrayList<Item> arrayList, String itemName) {
+    Iterator<Item> itr = arrayList.iterator();
+    boolean fullStomach = false;
+    while (itr.hasNext()) {
+      Item itemInList = itr.next();
+      if (itemInList.getShortName().equalsIgnoreCase(itemName)){
+        if (itemInList instanceof Food) {
+          System.out.println("You ate the " + itemInList.getShortName().toLowerCase(Locale.ROOT));
+          System.out.println("...");
+          fullStomach = true;
+          if (((Food) itemInList).getHealthPoints() > 0) {
+            System.out.println("You got " + ((Food) itemInList).getHealthPoints() + " health");
+            health += ((Food) itemInList).getHealthPoints();
+          }
+          else if (((Food) itemInList).getHealthPoints() < 0) {
+            System.out.println("You lost " + ((Food) itemInList).getHealthPoints() + " health");
+            health += ((Food) itemInList).getHealthPoints();
+          }
+          itr.remove();
+        }
+        else
+          System.out.println("You can't eat " + itemInList.getShortName());
+      }
+    }
+    return fullStomach;
+  }
+
+  /*
   void eat(String string) {
     ArrayList<Item> tempList = new ArrayList<>();
     boolean noItem = false;
@@ -207,6 +240,8 @@ public class Player {
       takeAction();
     } else System.out.println("There are no more eatable items. You continue onwards");
   }
+
+   */
 
   void equipItem(String input, String action) {
     boolean noItem = false;
@@ -291,7 +326,7 @@ public class Player {
   public void merchantTakeAction() {
     currentRoom.getNpc().displayInventory();
     displayInventory();
-    System.out.println("Take an action (inspect+item, purchase+item, sell+item, or leave/l) ");
+    System.out.println("Take an action (inspect+item, buy+item, sell+item, or leave/l) ");
     String userInput = in.nextLine().toLowerCase(Locale.ROOT);
 
     if (userInput.contains("inspect")) {
