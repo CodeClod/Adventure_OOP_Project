@@ -7,8 +7,6 @@ public class Game {
   Darkness dark = new Darkness(ui, in);
   StringBuilder roomCheck = new StringBuilder();
 
-  String playerInput;
-
   void tellIfVisited(Room room) {
     // Checks if you've gone that way before and tells you
     for (int i = 0; i < Compass.values().length; i++) {
@@ -34,6 +32,7 @@ public class Game {
     // Program Start
     ui.programStartupWelcome();
 
+
     // Program loop
     do {
       if (player.getCurrentRoom().checkIfDarkness() && !player.getCurrentRoom().checkIfLightsOn())
@@ -42,7 +41,7 @@ public class Game {
         player.setCurrentRoom(dark.lightsOff(player.getCurrentRoom(), player.getLastRoom()));
 
       ui.askForPrompt();
-      playerInput = player.playerInput();
+      String playerInput = in.nextLine();
 
       // Switch for all commands
       switch (playerInput) {
@@ -57,15 +56,21 @@ public class Game {
         }
         case "look" -> {
           ui.lookAround(player.getCurrentRoom());
+          if (!player.getCurrentRoom().checkIfContainsNPC())
+            System.out.println(player.getCurrentRoom().getNpc().getDescriptionLong());
           tellIfVisited(player.getCurrentRoom());
           player.findItems();
         }
-        case "inventory", "invent", "inv" -> {
-          player.takeAction();
-        }
+        case "inventory", "invent", "inv" -> player.takeAction();
         case "health" -> player.showHealth();
         case "attack" -> player.attack();
         case "xyzzy" -> player.xyzzy();
+        case "talk" -> {
+          if (!player.getCurrentRoom().checkIfContainsNPC())
+          player.talkAction();
+          else
+            System.out.println("There's no one around to talk to.");
+        }
         default -> ui.invalidCommand();
       }
       System.out.println();

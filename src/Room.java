@@ -9,13 +9,22 @@ public class Room {
   private Room east;
   private Room south;
   private Room west;
+  private NPC npc;
   private boolean visited = false;
   private boolean light = false;
   private boolean darkness = false;
   private boolean searched = false;
+  private boolean containsNPC = false;
   ArrayList<Item> items = new ArrayList<>();
   List<Compass> lockedDoors = new ArrayList<>();
   List<Compass> unlockedDoors = new ArrayList<>();
+
+  public Room(NPC npc) {
+    this.npc = npc;
+  }
+
+  public Room() {
+  }
 
   //Checks
   boolean checkIfVisited() {
@@ -32,6 +41,10 @@ public class Room {
 
   boolean checkIfDoorIsLocked(Compass direction) {
     return lockedDoors.contains(direction);
+  }
+
+  boolean checkIfContainsNPC () {
+    return containsNPC;
   }
 
   // Setters
@@ -60,6 +73,10 @@ public class Room {
 
   void setSearched() {
     searched = true;
+  }
+
+  void setContainsNPC() {
+    containsNPC = true;
   }
 
   void setLock(Compass direction) {
@@ -116,6 +133,10 @@ public class Room {
     }
   }
 
+  NPC getNpc() {
+    return npc;
+  }
+
   //Items
   void addItem(Item item) {
     items.add(item);
@@ -131,7 +152,7 @@ public class Room {
     if(searched) {
       System.out.println("ITEM:                                      VALUE: ");
       for (Item item : items) {
-        System.out.printf("%-44s %s\n", item.getShortname(), item.getValue());
+        System.out.printf("%-44s %s\n", item.getShortName(), item.getValue());
       }
     }
     else

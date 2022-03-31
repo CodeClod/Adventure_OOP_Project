@@ -15,7 +15,6 @@ public class Player {
   LockedDoors ld;
   ArrayList<Item> items = new ArrayList<>();
 
-
   Player(Room StartingRoom, int health, int purseGold, Weapon equipped, UserInterface ui, Scanner in) {
     this.ui = ui;
     this.in = in;
@@ -31,30 +30,75 @@ public class Player {
     addItem(chicken);
   }
 
-  Weapon getEquipped() {
-    return equipped;
-  }
-
-  //gold
-  void addToPurse(Gold gold) {
-    purseGold += gold.getValue();
-  }
-
-  boolean removeFromPurse(int gold) { //TODO: skal muligvis rettes til.
-    if (gold > purseGold) {
-      return false;
-    } else
-      purseGold -= gold;
-    return true;
-  }
-
-  //items
+  //items - add/remove
   void addItem(Item item) {
     items.add(item);
   }
 
   void removeItems(ArrayList<Item> list) {
     items.removeAll(list);
+  }
+
+  //gold - add/remove
+  void addToPurse(Gold gold) {
+    purseGold += gold.getValue();
+  }
+
+  void addToPurse(int gold) {
+    purseGold += gold;
+  }
+
+  void removeFromPurse(int gold) {
+      purseGold -= gold;
+  }
+
+  // Health - Status & add/remove
+  void showHealth() {
+    if (health == 100) {
+      System.out.println("You're at " + health + " health. You're quite healthy.");
+    } else if (health <= 80) {
+      System.out.println("You're at " + health + " health. You got some scrapes, but you're alright.");
+    } else if (health <= 60) {
+      System.out.println("You're at " + health + " health. You're slightly hurt, maybe you should eat a fruit?");
+    } else if (health <= 40) {
+      System.out.println("You're at " + health + " health. You're quite hurt, be careful...");
+    } else if (health <= 20) {
+      System.out.println("You're at " + health + " health. You're seriously hurt, you need immediate healing!");
+    }
+  }
+
+  void loseHealth(int health) {
+    this.health -= health;
+  }
+
+  void getHealth(int health) {
+    this.health += health;
+  }
+
+  //Actions - Items
+  void takeAction() {
+    currentRoom.displayRoomInventory();
+    displayInventory();
+    System.out.println("Take an action (take+item, drop+item, eat+item, equip+item, unequip+item or leave/l) ");
+    String userInput = in.nextLine().toLowerCase(Locale.ROOT);
+
+    if (userInput.contains("take")) {
+      userInput = userInput.substring(5);
+      takeItem(userInput);
+    } else if (userInput.contains("drop")) {
+      userInput = userInput.substring(5);
+      dropItem(userInput);
+    } else if (userInput.contains("eat")) {
+      userInput = userInput.substring(4);
+      eat(userInput);
+    } else if (userInput.contains("equip")) {
+      String userInputAction = userInput.substring(0, 5);
+      userInput = userInput.substring(6);
+      equipItem(userInput, userInputAction);
+    } else if (userInput.contains("leave") || userInput.contains("l")) {
+      System.out.println("You continue onwards");
+    } else
+      takeAction();
   }
 
   void findItems() {
@@ -74,43 +118,14 @@ public class Player {
     }
   }
 
-  void takeAction() {
-    currentRoom.displayRoomInventory();
-    displayPlayerInventory();
-    System.out.println("Take an action (take+item, drop+item, eat+item, equip+item, unequip+item or leave/l) ");
-    String userInput = in.nextLine().toLowerCase(Locale.ROOT);
-
-    if (userInput.contains("take")) {
-      userInput = userInput.substring(5);
-      takeItem(userInput);
-    }
-    else if (userInput.contains("drop")) {
-      userInput = userInput.substring(5);
-      dropItem(userInput);
-    }
-    else if (userInput.contains("eat")) {
-      userInput = userInput.substring(4);
-      eat(userInput);
-    }
-    else if (userInput.contains("equip")) {
-      String userInputAction = userInput.substring(0, 5);
-      userInput = userInput.substring(6);
-      equipItem(userInput, userInputAction);
-    }
-    else if (userInput.contains("leave") || userInput.contains("l")) {
-      System.out.println("You continue onwards");
-    } else
-      takeAction();
-  }
-
   void takeItem(String string) {
     ArrayList<Item> toRemove = new ArrayList<>();
     boolean noItem = false;
     for (Item item : currentRoom.items
     ) {
-      if (string.equalsIgnoreCase(item.getShortname())) {
+      if (string.equalsIgnoreCase(item.getShortName())) {
         toRemove.add(item);
-        System.out.println("You pick up the " + item.getShortname());
+        System.out.println("You pick up the " + item.getShortName());
         if (item.getClass().equals(Gold.class)) {
           addToPurse((Gold) item);
         } else
@@ -137,67 +152,24 @@ public class Player {
     } else {
       for (Item item : items
       ) {
-        if (string.equalsIgnoreCase(item.getShortname())) {
+        if (string.equalsIgnoreCase(item.getShortName())) {
           toRemove.add(item);
-          System.out.println("You drop the " + item.getShortname());
+          System.out.println("You drop the " + item.getShortName());
           currentRoom.addItem(item);
         } else {
           noItem = true;
         }
       }
+      if (toRemove.contains(equipped))
+        equipped = null;
       removeItems(toRemove);
       if (!items.isEmpty()) {
-        if (noItem) {
+        if (!noItem) {
           System.out.println("You have no such item!, try again");
         }
         takeAction();
       } else System.out.println("You pack your stuff.");
     }
-  }
-
-  void equipItem(String input, String action) {
-    boolean noItem = false;
-    for (Item item : items
-    ) {
-      if ((input.equalsIgnoreCase(item.getShortname()) && action.equalsIgnoreCase("equip")) &&
-          (item.getClass().equals(MeleeWeapon.class) || item.getClass().equals(RangedWeapon.class))) {
-        System.out.println("You equip the " + item.getShortname());
-        equipped = (Weapon) item;
-      }else {
-        noItem = true;
-      }
-    }
-    if (equipped != null && action.contains("un")) {
-      equipped = null;
-    }
-    if (!items.isEmpty()) {
-      if (noItem) {
-        System.out.println("You have no such weapon!, try again");
-      }
-      takeAction();
-    } else System.out.println("Your inventory is empty. You continue onwards");
-  }
-
-  void showHealth() {
-    if (health == 100) {
-      System.out.println("You're at " + health + " health. You're quite healthy.");
-    } else if (health <= 80) {
-      System.out.println("You're at " + health + " health. You got some scrapes, but you're alright.");
-    } else if (health <= 60) {
-      System.out.println("You're at " + health + " health. You're slightly hurt, maybe you should eat a fruit?");
-    } else if (health <= 40) {
-      System.out.println("You're at " + health + " health. You're quite hurt, be careful...");
-    } else if (health <= 20) {
-      System.out.println("You're at " + health + " health. You're seriously hurt, you need immediate healing!");
-    }
-  }
-
-  void loseHealth(int health) {
-    this.health -= health;
-  }
-
-  void getHealth(int health) {
-    this.health += health;
   }
 
   void eat(String string) {
@@ -206,9 +178,9 @@ public class Player {
     boolean notEatable = false;
     for (Item item : items
     ) {
-      if (string.equalsIgnoreCase(item.getShortname()) && item.getClass().equals(Food.class)) {
+      if (string.equalsIgnoreCase(item.getShortName()) && item.getClass().equals(Food.class)) {
         tempList.add(item);
-        System.out.println("You ate the " + item.getShortname().toLowerCase(Locale.ROOT));
+        System.out.println("You ate the " + item.getShortName().toLowerCase(Locale.ROOT));
         System.out.println("...");
 
         if (((Food) item).getHealthPoints() > 0) {
@@ -220,8 +192,8 @@ public class Player {
           health -= ((Food) item).getHealthPoints();
 
         }
-      } else if (string.equalsIgnoreCase(item.getShortname()) && !item.getClass().equals(Food.class)) {
-        System.out.println("You can't eat that " + item.getShortname());
+      } else if (string.equalsIgnoreCase(item.getShortName()) && !item.getClass().equals(Food.class)) {
+        System.out.println("You can't eat that " + item.getShortName());
         notEatable = true;
       } else {
         noItem = true;
@@ -229,48 +201,37 @@ public class Player {
     }
     removeItems(tempList);
     if (!items.isEmpty()) {
-      if (noItem && !notEatable) {
+      if (!noItem && !notEatable) {
         System.out.println("There's no such item");
       }
       takeAction();
     } else System.out.println("There are no more eatable items. You continue onwards");
   }
 
-  void displayPlayerInventory() {
-    System.out.println("____________________INVENTORY_____________________");
-    System.out.println("ITEM:                                      VALUE: ");
-    for (Item item : items) {
-      System.out.printf("%-44s %s\n", item.getShortname(), item.getValue());
+  void equipItem(String input, String action) {
+    boolean noItem = false;
+    for (Item item : items
+    ) {
+      if ((input.equalsIgnoreCase(item.getShortName()) && action.equalsIgnoreCase("equip")) &&
+          (item.getClass().equals(MeleeWeapon.class) || item.getClass().equals(RangedWeapon.class))) {
+        System.out.println("You equip the " + item.getShortName());
+        equipped = (Weapon) item;
+      } else {
+        noItem = true;
+      }
     }
-    System.out.println("__________________________________________________");
-    System.out.printf("%-44s %d \n", "PURSE (GOLD):", purseGold);
-    if (equipped != null)
-      System.out.println("EQUIPPED: " + equipped.getShortname());
-    else
-      System.out.println("You have no weapon equipped!");
-    System.out.println();
+    if (equipped != null && action.contains("un")) {
+      equipped = null;
+    }
+    if (!items.isEmpty()) {
+      if (!noItem) {
+        System.out.println("You have no such weapon!, try again");
+      }
+      takeAction();
+    } else System.out.println("Your inventory is empty. You continue onwards");
   }
 
-  String playerInput() {
-    return in.nextLine();
-  }
-
-  void setCurrentRoom(Room room) {
-    currentRoom = room;
-  }
-
-  public Room getCurrentRoom() {
-    return currentRoom;
-  }
-
-  void setLastRoom(Room room) {
-    lastRoom = room;
-  }
-
-  public Room getLastRoom() {
-    return lastRoom;
-  }
-
+  //Actions - Movement
   void playerMove(Compass direction) {
     setLastRoom(currentRoom);
     if (currentRoom.checkIfDoorIsLocked(direction))
@@ -280,6 +241,8 @@ public class Player {
       if (!(currentRoom.checkIfVisited())) {
         currentRoom.setVisitedTrue();
         ui.goMessage(currentRoom, direction);
+        if (!getCurrentRoom().checkIfContainsNPC())
+          System.out.println(getCurrentRoom().getNpc().getDescriptionLong());
       } else
         ui.goVisitedMessage(currentRoom, direction);
     } else
@@ -293,6 +256,8 @@ public class Player {
     xyzzy = teleportRoom;
   }
 
+
+  //Actions - Combat
   public void attack() {
     if (equipped != null) {
       if (equipped.getClass().equals(MeleeWeapon.class)) {
@@ -302,5 +267,158 @@ public class Player {
         System.out.printf("You attack an invisible enemy and deal %s damage to the air!!!\n", equipped.getDamage());
       }
     } else System.out.println("You can't attack. You have no weapon equipped");
+  }
+
+  //Actions - NPC
+  public void talkAction() {
+    System.out.println("Who do you want to talk to? (talk to+name or leave/l) ");
+    System.out.println("1. : " + currentRoom.getNpc().getClassDescription());
+    String userInput = in.nextLine().toLowerCase(Locale.ROOT); // TODO: add loop for arraylist if room contains multiple NPCs
+    if (userInput.contains("merchant")) {
+      talkToMerchant();
+    } else if (userInput.contains("leave") || userInput.contains("l")) {
+      System.out.println("You continue onwards");
+    } else
+      talkAction();
+  }
+
+  public void talkToMerchant() {
+    System.out.printf("You are greeted by the %s, his name is %s. He is %s\n", currentRoom.getNpc().getClassDescription(), currentRoom.getNpc().getName(), currentRoom.getNpc().getDescriptionShort());
+    System.out.println("He shows you his inventory.");
+    merchantTakeAction();
+  }
+
+  public void merchantTakeAction() {
+    currentRoom.getNpc().displayInventory();
+    displayInventory();
+    System.out.println("Take an action (inspect+item, purchase+item, sell+item, or leave/l) ");
+    String userInput = in.nextLine().toLowerCase(Locale.ROOT);
+
+    if (userInput.contains("inspect")) {
+      userInput = userInput.substring(8);
+      inspectItem(userInput);
+    } else if (userInput.contains("buy")) {
+      userInput = userInput.substring(4);
+      buyItem(userInput);
+    } else if (userInput.contains("sell")) {
+      userInput = userInput.substring(5);
+      sellItem(userInput);
+    } else if (userInput.contains("leave") || userInput.contains("l")) {
+      System.out.println("You continue onwards");
+    } else
+      merchantTakeAction();
+  }
+
+  void inspectItem(String string) {
+    boolean noItem = false;
+    for (Item item : currentRoom.getNpc().items
+    ) {
+      if (string.equalsIgnoreCase(item.getShortName())) {
+        System.out.println("You inspect the " + item.getShortName());
+        System.out.println("It's " + item.getLongName());
+        System.out.println();
+      } else {
+        noItem = true;
+      }
+    }
+    if (!currentRoom.getNpc().items.isEmpty()) {
+      if (!noItem) {
+        System.out.println("No such item is for sale!, try again");
+      }
+      merchantTakeAction();
+    } else System.out.println("There are no more items to buy. You continue onwards");
+  }
+
+  void buyItem(String string) {
+    ArrayList<Item> toRemove = new ArrayList<>();
+    boolean noItem = false;
+    for (Item item : currentRoom.getNpc().items
+    ) {
+      if (string.equalsIgnoreCase(item.getShortName()) && purseGold >= item.getValue()) {
+        toRemove.add(item);
+        removeFromPurse(item.getValue());
+        currentRoom.getNpc().addToPurse(item.getValue());
+        System.out.println("You buy the " + item.getShortName());
+        addItem(item);
+      } else {
+        noItem = true;
+      }
+    }
+    currentRoom.getNpc().removeItems(toRemove);
+    if (!currentRoom.getNpc().items.isEmpty()) {
+      if (!noItem) {
+        System.out.println("No such item is for sale!, try again");
+      }
+      merchantTakeAction();
+    } else System.out.println("There are no more items to buy. You continue onwards");
+  }
+
+  void sellItem(String string) {
+    ArrayList<Item> toRemove = new ArrayList<>();
+    boolean noItem = false;
+    if (items.size() == 0) {
+      System.out.println("Your inventory is empty. You continue onwards");
+      takeAction();
+    } else {
+      for (Item item : items
+      ) {
+        if (string.equalsIgnoreCase(item.getShortName()) && currentRoom.getNpc().getPurseGold()>= item.getValue()) {
+          toRemove.add(item);
+          currentRoom.getNpc().removeFromPurse(item.getValue());
+          addToPurse(item.getValue());
+          System.out.println("You sell the " + item.getShortName());
+          currentRoom.getNpc().addItem(item);
+        } else {
+          noItem = true;
+        }
+      }
+      if (toRemove.contains(equipped))
+        equipped = null;
+      removeItems(toRemove);
+      if (!items.isEmpty()) {
+        if (!noItem) {
+          System.out.println("You have no such item!, try again");
+        }
+        merchantTakeAction();
+      } else System.out.println("You pack your stuff.");
+    }
+  }
+
+  // Inventory
+  void displayInventory() {
+    System.out.println("____________________INVENTORY_____________________");
+    System.out.println("ITEM:                                      VALUE: ");
+    for (Item item : items) {
+      System.out.printf("%-44s %s\n", item.getShortName(), item.getValue());
+    }
+    System.out.println("__________________________________________________");
+    System.out.printf("%-44s %d \n", "PURSE (GOLD):", purseGold);
+    if (equipped != null)
+      System.out.println("EQUIPPED: " + equipped.getShortName());
+    else
+      System.out.println("You have no weapon equipped!");
+    System.out.println();
+  }
+
+  //Setters
+  void setCurrentRoom(Room room) {
+    currentRoom = room;
+  }
+
+  void setLastRoom(Room room) {
+    lastRoom = room;
+  }
+
+  //Getters
+  public Room getCurrentRoom() {
+    return currentRoom;
+  }
+
+  public Room getLastRoom() {
+    return lastRoom;
+  }
+
+  Weapon getEquipped() {
+    return equipped;
   }
 }

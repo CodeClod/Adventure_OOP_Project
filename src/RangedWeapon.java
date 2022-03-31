@@ -4,3 +4,4 @@ public class RangedWeapon extends Weapon {
     super(shortName, longName, value, damage);
   }
 }
+/// TODO: add range?

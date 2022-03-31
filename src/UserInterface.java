@@ -21,7 +21,7 @@ public class UserInterface {
   }
 
   void goMessage(Room room, Compass direction) {
-    System.out.printf("You went %s, reaching a %s. You see %s ",direction, room.getName(), room.getRoomDescription());
+    System.out.printf("You went %s, reaching a %s. You see %s \n",direction, room.getName(), room.getRoomDescription());
   }
 
   void goVisitedMessage(Room room, Compass direction) {
@@ -54,11 +54,11 @@ public class UserInterface {
   }
 
   void messageDoorLocked2() {
-    System.out.println("Do you want to push the it aside (p) or look around (l)"); //Do you want to unlock the door (u) or look around (l)
+    System.out.println("Do you want to chop your way through (c) or look around (l)"); //Do you want to unlock the door (u) or look around (l)
   }
 
   void messageDoorLocked3() {
-    System.out.println("You push the log aside"); // You unlock the door
+    System.out.println("You chop your way through the log!"); // You unlock the door
   }
 
   void messageDoorLocked4(Room currentRoom) {
@@ -66,7 +66,7 @@ public class UserInterface {
   }
 
   void messageDoorLockedDefault() {
-    System.out.println("The log is still blocking the way."); //The door is still locked.
+    System.out.println("The log is still blocking the way. You'll need to equip an axe to chop your way through!"); //The door is still locked.
   }
 
   //Darkness

@@ -9,7 +9,7 @@ public class Item {
         this.value = value;
     }
 
-    String getShortname() {
+    String getShortName() {
         return shortName;
     }
 

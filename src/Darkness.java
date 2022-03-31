@@ -1,4 +1,3 @@
-import java.util.ArrayList;
 import java.util.Objects;
 import java.util.Scanner;
 
@@ -21,7 +20,7 @@ public class Darkness {
       ui.askForPrompt();
       switch (in.nextLine()) {
         case "t" -> {
-          if (equipped != null && Objects.equals(equipped.getShortname(), "Torch")) {
+          if (equipped != null && Objects.equals(equipped.getShortName(), "Torch")) {
             currentRoom.setLightsOn();
             ui.messageDarkness3();
             loop = false;
